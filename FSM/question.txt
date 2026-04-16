@@ -1,0 +1,41 @@
+1. 状态机题
+
+题目：序列检测器（1101）
+
+设计一个序列检测器，输入为 clk, rst_n, din，输出为 match。
+
+要求：
+
+当串行输入比特流中检测到序列 1101 时，match 拉高 1 个时钟周期。
+允许重叠检测。例如输入序列为 1101101，应该检测出两次。
+采用三段式状态机写法。
+复位为低有效异步复位。
+说明你的状态定义，以及为什么允许重叠时状态需要如何跳转。
+
+面试常见追问：
+
+Moore 和 Mealy 你这里为什么选这个？
+如果要检测 1011，你怎么改？
+为什么三段式比一段式更适合面试手写？
+
+English Version:
+
+1. FSM Question
+
+Problem: Sequence Detector (1101)
+
+Design a sequence detector with inputs clk, rst_n, and din, and output match.
+
+Requirements:
+
+When the serial input bit stream detects the sequence 1101, match should be asserted high for 1 clock cycle.
+Overlapping detection is allowed. For example, for the input sequence 1101101, the detector should report two matches.
+Use a three-process FSM coding style.
+Reset is an active-low asynchronous reset.
+Explain your state definitions, and describe how the state transitions should work to support overlapping detection.
+
+Common Interview Follow-up Questions:
+
+Why would you choose Moore or Mealy here?
+If the target sequence were changed to 1011, how would you modify the design?
+Why is the three-process FSM style more suitable than a one-process style for handwritten interview coding?
