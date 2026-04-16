@@ -16,9 +16,9 @@ module syn_fifo #(
     output  logic    [DATA_WIDTH-1:0]       rd_data,
     output  logic                           empty
 
-)
+);
     //internal use
-    logic [DEPTH-1:0]   mem [0:ADDRESS-1];
+    logic [DATA_WIDTH-1:0]   mem [0:ADDRESS-1];
     logic [ADDRESS:0]   wr_pointer;
     logic [ADDRESS:0]   rd_pointer;
 
@@ -28,7 +28,7 @@ module syn_fifo #(
     //logic for empty and full
     assign full     =   (wr_pointer[ADDRESS] != rd_pointer[ADDRESS]) && 
                         (wr_pointer[ADDRESS-1:0] == wr_pointer[ADDRESS-1:0]);
-    assign empty    =   wr_pointer == rd_pointer
+    assign empty    =   wr_pointer == rd_pointer;
 
     //syn_read
     always @(posedge clk or negedge rst_n)begin
