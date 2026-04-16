@@ -1,27 +1,27 @@
 `timescale 1ns/1ps
-module tb_hand_write_synfifo;
+module tb_synfifo;
 
 	logic clk;
 	logic rst_n;
 
 	logic wr_en;
-	logic [63:0] wr_data; 
+	logic [63:0] in_data; 
 	logic full;
 
 	logic rd_en;
-	logic [63:0] rd_data;
+	logic [63:0] out_data;
 	logic empty;
 
-	hand_write_syn_fifo dut(
+	synfifo dut(
 		.clk		(clk),
 		.rst_n		(rst_n),
 		
 		.wr_en		(wr_en),
-		.wr_data	(wr_data),
+		.in_data	(in_data),
 		.full		(full),
 
 		.rd_en		(rd_en),
-		.rd_data	(rd_data),
+		.out_data	(out_data),
 		.empty		(empty)
 	);
 
@@ -34,7 +34,7 @@ module tb_hand_write_synfifo;
 	initial begin
 		rst_n 	= 1'b0;
 		wr_en 	= 1'b0;
-		wr_data = 64'd0;
+		in_data = 64'd0;
 		rd_en	= 1'b0;
 	
 		#20;
@@ -43,7 +43,7 @@ module tb_hand_write_synfifo;
 		//write into it
 		#30;
 		wr_en	= 1'b1;
-		wr_data	= 64'h1111222233334444;
+		in_data	= 64'h1111222233334444;
 		#10;
 		wr_en	= 1'b0;
 		#10;
@@ -57,8 +57,8 @@ module tb_hand_write_synfifo;
 	end
 
 	initial begin
-		$dumpfile("tb_hand_write_synfifo.vcd");
-		$dumpvars(0,tb_hand_write_synfifo);
+		$dumpfile("tb_synfifo.vcd");
+		$dumpvars(0,tb_synfifo);
 	end
 
 endmodule
