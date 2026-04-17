@@ -1,0 +1,34 @@
+3. 简单算术电路题
+
+题目：6 路 32-bit 求和 + 握手
+
+设计一个模块，输入 6 个 32-bit 数据和 1 个 in_valid，输出一个 32-bit 求和结果 sum，并带有上游 in_ready、下游 out_valid、下游 out_ready 接口。这个题型和你看到的面经几乎一致。
+
+输入：
+
+clk
+rst_n
+in_valid
+in_data0 ~ in_data5 [31:0]
+out_ready
+
+输出：
+
+in_ready
+out_valid
+sum[31:0]
+
+要求：
+
+当 in_valid && in_ready 时采样 6 个输入。
+计算 6 个 32-bit 数之和，结果输出到 sum。
+只有当结果有效时，out_valid=1。
+当下游未准备好（out_ready=0）时，结果必须保持不变，不能丢。
+说明这个电路可能有哪些时序风险。
+进一步说明：如果频率要求提高，你会如何插 pipeline。
+
+面试常见追问：
+
+6 个 32-bit 直接串行相加有什么问题？
+为什么会形成 critical path？
+你会怎么拆成两级或三级流水？
