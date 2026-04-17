@@ -28,7 +28,7 @@ module sixLaneSum_handshake(
 		S1
 	} states;
 
-	logic curr_state, next_state;
+	states curr_state, next_state;
 
 	//state register
 	always_ff @(posedge clk or negedge rst_n)begin
@@ -41,6 +41,7 @@ module sixLaneSum_handshake(
 
 	//next state logic 
 	always_comb begin
+		next_state = curr_state;
 		case(curr_state)
 			S0: begin 
 				if(in_hs)begin
@@ -61,25 +62,29 @@ module sixLaneSum_handshake(
 		if(~rst_n)begin
 			sum		<= '0;
 			out_valid	<= '0;
-			in_ready	<= '0;
-		end
-		case(curr_state)
-			S0: begin
-				if(in_hs)begin
-					sum 	<= result;
-					out_valid<= 1'b1;
-				end
-			end
-			S1: begin
-				if (out_hs)begin
+		end else begin
+			case(curr_state)
+				S0: begin
 					if(in_hs)begin
-						sum	<= result;
-					end else begin
-						out_valid <= '0;
+						sum 	<= result;
+						out_valid<= 1'b1;
 					end
 				end
-			end
-		endcase
+				S1: begin
+					if (out_hs)begin
+						if(in_hs)begin
+							sum	<= result;
+						end else begin
+							out_valid <= '0;
+						end
+					end
+				end
+			endcase
+		end
+	end
+
+	always_comb begin
+		in_ready = out_hs | curr_state==S0;
 	end
 endmodule
 

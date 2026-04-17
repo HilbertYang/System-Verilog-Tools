@@ -10,27 +10,24 @@ module one_stage_buffer (
     output logic [31:0] out_data
 );
 
-    logic        buf_valid;
-    logic [31:0] buf_data;
 
     // in_ready: buffer is empty, or downstream takes data this cycle (making room)
     // Expression: in_ready = ~buf_valid | out_ready
-    assign in_ready  = ~buf_valid | out_ready;
-    assign out_valid = buf_valid;
-    assign out_data  = buf_data;
+    assign in_ready  = ~out_valid || (out_valid && out_ready) ;
+
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            buf_valid <= 1'b0;
-            buf_data  <= 32'b0;
+            out_valid <= 1'b0;
+            out_data  <= 32'b0;
         end else begin
-            if (buf_valid && out_ready) begin
+            if (out_valid && out_ready) begin
                 // downstream consumes data; simultaneously accept new data if available
-                buf_valid <= in_valid;
-                buf_data  <= in_data;
-            end else if (!buf_valid && in_valid) begin
-                buf_valid <= 1'b1;
-                buf_data  <= in_data;
+                out_valid <= in_valid;
+                out_data  <= in_data;
+            end else if (!out_valid && in_valid) begin
+                out_valid <= 1'b1;
+                out_data  <= in_data;
             end
         end
     end
