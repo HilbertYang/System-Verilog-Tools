@@ -1,0 +1,66 @@
+题目：同步 FIFO
+
+设计一个同步 FIFO 模块，名为 syn_fifo。
+
+参数：
+  DATA_WIDTH  — 数据位宽，默认 8
+  DEPTH       — FIFO 深度（条目数），默认 8（必须为2的幂次）
+
+端口定义：
+  输入：
+    clk          — 时钟
+    rst_n        — 异步低电平复位
+    wr_en        — 写使能
+    wr_data      — 写数据 [DATA_WIDTH-1:0]
+    rd_en        — 读使能
+  输出：
+    rd_data      — 读数据 [DATA_WIDTH-1:0]
+    full         — FIFO 满标志
+    empty        — FIFO 空标志
+
+行为要求：
+1. 写操作：wr_en=1 且 full=0 时，将 wr_data 写入当前写指针位置，写指针自增。
+2. 读操作：rd_en=1 且 empty=0 时，从当前读指针位置读出数据，读指针自增。
+3. 同一周期可以同时读写（wr_en=1 且 rd_en=1），FIFO 深度不变。
+4. full  = (写指针超前读指针恰好 DEPTH 个位置)
+   empty = (写指针 == 读指针)
+5. 使用"额外高位"法判断满/空（指针位宽为 $clog2(DEPTH)+1）。
+6. rd_data 为同步读出（寄存器输出）。
+
+示例时序（DEPTH=4）：
+  复位后：empty=1, full=0
+  写入 A,B,C,D → full=1
+  读出 A → full=0, rd_data=A
+  再写入 E → full=1
+
+---
+
+Question: Synchronous FIFO
+
+Design a module named syn_fifo.
+
+Parameters:
+  DATA_WIDTH  — data bus width, default 8
+  DEPTH       — number of entries, default 8 (must be a power of two)
+
+Ports:
+  Inputs:
+    clk          — clock
+    rst_n        — asynchronous active-low reset
+    wr_en        — write enable
+    wr_data      — write data [DATA_WIDTH-1:0]
+    rd_en        — read enable
+  Outputs:
+    rd_data      — read data [DATA_WIDTH-1:0]
+    full         — FIFO full flag
+    empty        — FIFO empty flag
+
+Behavior:
+1. Write: when wr_en=1 and full=0, write wr_data at the write pointer, then increment it.
+2. Read:  when rd_en=1 and empty=0, output data at the read pointer, then increment it.
+3. Simultaneous read and write in the same cycle is allowed; depth stays the same.
+4. full  = write pointer leads read pointer by exactly DEPTH positions.
+   empty = write pointer == read pointer.
+5. Use the "extra MSB" technique for full/empty detection
+   (pointer width = $clog2(DEPTH)+1).
+6. rd_data is a registered (synchronous) output.
