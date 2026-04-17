@@ -1,9 +1,3 @@
-// 两级流水版本
-// Stage1: 并行算 3 个 pair-sum（ps01, ps23, ps45）
-// Stage2: 3 路 partial sum 求总和 → sum
-//
-// Critical path: 单次加法延迟（vs 原版 5 次串联）
-
 module sixLaneSum_pipe2 (
 	input  logic        clk, rst_n,
 	input  logic [31:0] indata0, indata1, indata2, indata3, indata4, indata5,
@@ -20,7 +14,6 @@ assign in_hs  = in_valid  & in_ready;
 assign s1_hs  = s1_valid  & s1_ready;
 assign out_hs = out_valid & out_ready;
 
-// 反压：下游本周期会取走，或本级为空，即可接收
 assign in_ready = !s1_valid | s1_hs;
 assign s1_ready = !out_valid | out_hs;
 
