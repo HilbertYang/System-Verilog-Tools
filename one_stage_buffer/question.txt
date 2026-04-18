@@ -1,67 +1,84 @@
-题目：单级缓冲握手模块
+题目：单级握手缓冲器
 
-设计一个 1-stage buffer，接口如下：
+设计一个单入口流水线缓冲模块，名为 one_stage_buffer，实现上下游之间的
+valid/ready 握手解耦。
 
-输入：
+参数：
+  DATA_WIDTH — 数据位宽，默认 8
 
-clk
-rst_n
-in_valid
-in_data[31:0]
-out_ready
+端口定义：
+  输入：
+    clk       — 时钟
+    rst_n     — 异步低电平复位
+    in_valid  — 上游数据有效
+    in_data   — 上游数据 [DATA_WIDTH-1:0]
+    out_ready — 下游准备好接收
+  输出：
+    in_ready  — 通知上游可以发送
+    out_valid — 下游数据有效
+    out_data  — 下游数据 [DATA_WIDTH-1:0]
 
-输出：
+握手语义：
+  - 握手成功条件：valid & ready 同为高的时钟上升沿
+  - in_hs  = in_valid  & in_ready   （上游握手）
+  - out_hs = out_valid & out_ready  （下游握手）
 
-in_ready
-out_valid
-out_data[31:0]
+行为要求：
+1. 缓冲区为单条目，out_valid 同时作为"缓冲区非空"标志。
+2. in_ready（组合逻辑）：
+     - 缓冲区为空（out_valid=0）时，in_ready=1（随时可接收）
+     - 缓冲区满且下游同周期消费（out_hs=1）时，in_ready=1（同周期替换）
+     - 其余情况 in_ready=0
+3. 写入条件（in_hs=1）：将 in_data 写入缓冲并置 out_valid=1。
+4. 消费条件（out_hs=1 且无新数据写入）：清除 out_valid=0。
+5. 同周期替换（in_hs=1 且 out_hs=1）：新数据直接覆盖，out_valid 保持1。
 
-要求：
+关键特性：
+  - 支持同周期"消费并写入"（零气泡替换）
+  - in_ready 是组合逻辑，无额外延迟
 
-模块位于上游和下游之间，用于缓存 1 个 32-bit 数据。
-只有 in_valid && in_ready 时，才能从上游接收新数据。
-只有 out_valid && out_ready 时，才表示下游成功取走数据。
-当 buffer 里有数据时，out_valid=1；当 buffer 空时，out_valid=0。
-当 buffer 满时，不能继续接收新数据。
-写出 in_ready 的组合逻辑表达式，并解释原因。
+示例时序：
+  T1: in_valid=1, in_data=A, out_ready=0 → in_ready=1, 写入A, out_valid=1
+  T2: in_valid=1, in_data=B, out_ready=1 → in_hs=1 out_hs=1, 替换为B
+  T3: in_valid=0,            out_ready=1 → out_hs=1, 消费B, out_valid=0
 
-面试常见追问：
+---
 
-这个模块和 FIFO 有什么区别？
-为什么 valid 不能依赖 ready 来产生？
-如果要求支持“同拍出旧数据、同拍进新数据”，你逻辑怎么写？
+Question: One-Stage Handshake Buffer
 
-English Version:
+Design a single-entry pipeline buffer module named one_stage_buffer that
+decouples upstream and downstream via valid/ready handshake.
 
-Problem: Single-Stage Buffer Handshake Module
+Parameters:
+  DATA_WIDTH — data width, default 8
 
-Design a 1-stage buffer with the following interface:
+Ports:
+  Inputs:
+    clk       — clock
+    rst_n     — asynchronous active-low reset
+    in_valid  — upstream data valid
+    in_data   — upstream data [DATA_WIDTH-1:0]
+    out_ready — downstream ready to accept
+  Outputs:
+    in_ready  — notify upstream it can send
+    out_valid — downstream data valid
+    out_data  — downstream data [DATA_WIDTH-1:0]
 
-Inputs:
+Handshake semantics:
+  - A handshake occurs when both valid and ready are high on a rising clock edge
+  - in_hs  = in_valid  & in_ready
+  - out_hs = out_valid & out_ready
 
-clk
-rst_n
-in_valid
-in_data[31:0]
-out_ready
+Behavior:
+1. Single-entry buffer; out_valid doubles as the "buffer occupied" flag.
+2. in_ready (combinational):
+     - Buffer empty (out_valid=0): in_ready=1
+     - Buffer full but downstream consuming same cycle (out_hs=1): in_ready=1
+     - Otherwise: in_ready=0
+3. Write (in_hs=1): latch in_data, assert out_valid=1.
+4. Consume (out_hs=1, no new write): deassert out_valid=0.
+5. Same-cycle replace (in_hs=1 and out_hs=1): new data overwrites, out_valid stays 1.
 
-Outputs:
-
-in_ready
-out_valid
-out_data[31:0]
-
-Requirements:
-
-The module sits between an upstream producer and a downstream consumer, and is used to buffer one 32-bit data word.
-The module can only accept new data from upstream when in_valid && in_ready is true.
-Data is considered successfully consumed by downstream only when out_valid && out_ready is true.
-When the buffer contains data, out_valid must be 1; when the buffer is empty, out_valid must be 0.
-When the buffer is full, it must not accept additional new data.
-Write the combinational logic expression for in_ready, and explain why.
-
-Common Interview Follow-up Questions:
-
-What is the difference between this module and a FIFO?
-Why must valid not be generated based on ready?
-If the design is required to support "output old data and accept new data in the same cycle," how would you write the logic?
+Key property:
+  - Supports zero-bubble same-cycle consume-and-refill
+  - in_ready is purely combinational (no extra latency)

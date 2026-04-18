@@ -1,0 +1,95 @@
+题目：十字路口交通灯控制器
+
+设计一个 Moore 型 FSM 模块，名为 traffic_light，控制一个十字路口
+南北（NS）和东西（EW）两个方向的交通灯。
+
+参数：
+  GREEN_TIME  — 绿灯持续时钟周期数，默认 4
+  YELLOW_TIME — 黄灯持续时钟周期数，默认 2
+
+端口定义：
+  输入：
+    clk      — 时钟
+    rst_n    — 异步低电平复位
+  输出：
+    ns_light [1:0] — 南北方向灯：2'b00=红, 2'b01=黄, 2'b10=绿
+    ew_light [1:0] — 东西方向灯：2'b00=红, 2'b01=黄, 2'b10=绿
+
+灯的编码：
+  RED    = 2'b00
+  YELLOW = 2'b01
+  GREEN  = 2'b10
+
+状态与输出（Moore）：
+  S0 NS_GREEN  : ns=绿, ew=红  → 持续 GREEN_TIME  个周期
+  S1 NS_YELLOW : ns=黄, ew=红  → 持续 YELLOW_TIME 个周期
+  S2 EW_GREEN  : ns=红, ew=绿  → 持续 GREEN_TIME  个周期
+  S3 EW_YELLOW : ns=红, ew=黄  → 持续 YELLOW_TIME 个周期
+
+状态转移：
+  S0 → S1（绿灯倒计时结束）
+  S1 → S2（黄灯倒计时结束）
+  S2 → S3（绿灯倒计时结束）
+  S3 → S0（黄灯倒计时结束）
+
+要求：
+1. 内部使用一个计数器跟踪当前状态已持续的周期数，到期后跳转。
+2. 进入新状态时计数器清零并从1开始计数（或0开始均可，保持一致）。
+3. 复位后进入 S0（NS绿灯），计数器清零。
+4. 两段式或三段式 FSM 均可。
+
+示例时序（GREEN_TIME=4, YELLOW_TIME=2）：
+  周期 1-4  : ns=绿, ew=红
+  周期 5-6  : ns=黄, ew=红
+  周期 7-10 : ns=红, ew=绿
+  周期 11-12: ns=红, ew=黄
+  周期 13   : ns=绿, ew=红（循环）
+
+---
+
+Question: Traffic Light Controller
+
+Design a Moore FSM module named traffic_light that controls traffic lights
+at a two-way intersection: North-South (NS) and East-West (EW).
+
+Parameters:
+  GREEN_TIME  — clock cycles for green phase, default 4
+  YELLOW_TIME — clock cycles for yellow phase, default 2
+
+Ports:
+  Inputs:
+    clk      — clock
+    rst_n    — asynchronous active-low reset
+  Outputs:
+    ns_light [1:0] — NS direction: 2'b00=Red, 2'b01=Yellow, 2'b10=Green
+    ew_light [1:0] — EW direction: 2'b00=Red, 2'b01=Yellow, 2'b10=Green
+
+Light encoding:
+  RED    = 2'b00
+  YELLOW = 2'b01
+  GREEN  = 2'b10
+
+States and outputs (Moore):
+  S0 NS_GREEN  : ns=Green, ew=Red    → hold for GREEN_TIME  cycles
+  S1 NS_YELLOW : ns=Yellow, ew=Red   → hold for YELLOW_TIME cycles
+  S2 EW_GREEN  : ns=Red,   ew=Green  → hold for GREEN_TIME  cycles
+  S3 EW_YELLOW : ns=Red,   ew=Yellow → hold for YELLOW_TIME cycles
+
+Transitions:
+  S0 → S1 (green timer expires)
+  S1 → S2 (yellow timer expires)
+  S2 → S3 (green timer expires)
+  S3 → S0 (yellow timer expires)
+
+Requirements:
+1. Use an internal counter to track how many cycles the current state has been active.
+2. Reset the counter when entering a new state.
+3. After reset, enter S0 (NS green) with the counter cleared.
+4. Two-always or three-always FSM style is acceptable.
+
+Example timing (GREEN_TIME=4, YELLOW_TIME=2):
+  Cycles  1-4 : ns=Green,  ew=Red
+  Cycles  5-6 : ns=Yellow, ew=Red
+  Cycles 7-10 : ns=Red,    ew=Green
+  Cycles 11-12: ns=Red,    ew=Yellow
+  Cycle  13+  : ns=Green,  ew=Red  (repeats)
