@@ -1,28 +1,80 @@
-4. 异步复位同步释放题
+题目：异步断言、同步释放复位同步器
 
-题目：异步复位、同步释放电路
+设计一个复位同步模块，名为 async_rst_sync_release，实现"异步断言、同步释放"的复位策略。
 
-请设计一个复位同步模块：
+端口定义：
+  输入：
+    clk    — 时钟
+    arst_n — 外部异步低电平复位
+  输出：
+    srst_n — 同步释放的复位输出（低有效）
 
-输入：
+行为要求：
+1. 断言（arst_n=0）：srst_n 立即异步拉低，不等待时钟边沿。
+2. 释放（arst_n=1）：srst_n 必须在时钟域内同步拉高，经过 2 个时钟周期后才变高。
+3. 使用 2 级触发器级联实现，第一级 ff1 固定输入 1'b1，第二级 ff2 跟随 ff1。
+4. 两级触发器的异步复位端都接 arst_n，保证断言时立即清零。
 
-clk
-arst_n（低有效异步复位）
-
-输出：
-
-srst_n
-
-要求：
-
-外部复位 arst_n 可以异步拉低。
-复位解除时，必须在 clk 域内同步释放。
-用 2 级触发器实现。
-说明为什么“异步断言、同步释放”比“完全异步”更安全。
-给出简洁 Verilog 实现。
+内部结构：
+  arst_n=0 时：ff1=0, ff2=0 → srst_n=0（异步，立即）
+  arst_n=1 后：
+    第1个 posedge clk：ff1 ← 1'b1，ff2 ← ff1（=0）→ srst_n=0
+    第2个 posedge clk：ff1 ← 1'b1，ff2 ← ff1（=1）→ srst_n=1（释放）
 
 面试常见追问：
+1. 为什么"异步断言、同步释放"比"完全异步"更安全？
+   → 异步释放时，不同 FF 可能在不同时钟边沿脱离复位，导致电路状态不一致。
+     同步释放确保所有 FF 在同一时钟边沿退出复位。
 
-为什么同步释放能降低亚稳态风险？
-两级同步器够不够？什么时候可能用三级？
-这个电路算不算 CDC？
+2. 为什么用两级同步器？
+   → arst_n 释放时可能恰好在时钟上升沿附近，ff1 可能进入亚稳态。
+     两级结构给亚稳态足够时间稳定，ff2 采样到稳定的 ff1 输出。
+
+3. 什么时候用三级？
+   → 时钟频率很高（>500MHz）或对可靠性要求极高的场合，MTBF 要求更严格时。
+
+4. 这个电路算不算 CDC？
+   → arst_n 是异步信号，经过同步器进入 clk 域，本质上是一种单比特 CDC 处理。
+
+---
+
+Question: Async-Assert Sync-Release Reset Synchronizer
+
+Design a module named async_rst_sync_release implementing an
+"async assert, sync release" reset strategy.
+
+Ports:
+  Inputs:
+    clk    — clock
+    arst_n — external asynchronous active-low reset
+  Outputs:
+    srst_n — synchronized reset output (active-low)
+
+Behavior:
+1. Assert (arst_n=0): srst_n goes low immediately (asynchronous, no clock needed).
+2. Release (arst_n=1): srst_n goes high only after 2 clock edges (synchronous).
+3. Use two cascaded flip-flops: ff1 has a constant 1'b1 input; ff2 follows ff1.
+4. Both FFs have arst_n on their async reset, so both clear immediately on assert.
+
+Internal structure:
+  arst_n=0: ff1=0, ff2=0 → srst_n=0 (immediate)
+  arst_n=1:
+    posedge clk #1: ff1←1, ff2←0 → srst_n=0
+    posedge clk #2: ff1←1, ff2←1 → srst_n=1 (released)
+
+Interview follow-ups:
+1. Why is async-assert sync-release safer than fully async?
+   → Async release can cause different FFs to exit reset on different clock edges,
+     creating inconsistent initial state. Sync release ensures all FFs exit together.
+
+2. Why two flip-flops?
+   → arst_n may deassert near a clock edge, causing ff1 to go metastable.
+     The second stage gives metastability time to resolve before ff2 samples ff1.
+
+3. When to use three stages?
+   → Very high clock frequencies (>500 MHz) or applications requiring extremely
+     high MTBF where stricter metastability margins are needed.
+
+4. Is this a CDC circuit?
+   → Yes — arst_n is an asynchronous signal being brought into the clk domain,
+     which is fundamentally a single-bit CDC crossing.
