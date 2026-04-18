@@ -1,34 +1,72 @@
-3. 简单算术电路题
+题目 A：6路32位求和（单周期握手版）
 
-题目：6 路 32-bit 求和 + 握手
+设计模块 sixLaneSum_handshake：输入6个32位数，带 valid/ready 握手，单周期完成求和。
 
-设计一个模块，输入 6 个 32-bit 数据和 1 个 in_valid，输出一个 32-bit 求和结果 sum，并带有上游 in_ready、下游 out_valid、下游 out_ready 接口。这个题型和你看到的面经几乎一致。
+端口定义：
+  输入：clk, rst_n, in_valid, in_data0~in_data5 [31:0], out_ready
+  输出：in_ready, out_valid, sum [31:0]
 
-输入：
+行为要求：
+1. in_ready（组合逻辑）= ~out_valid | out_hs，与 one_stage_buffer 完全一致。
+2. in_hs 时：sum ← 六路之和，out_valid ← 1。
+3. out_hs 且无新数据时：out_valid ← 0。
+4. 支持同周期替换（in_hs & out_hs 同时）。
 
-clk
-rst_n
-in_valid
-in_data0 ~ in_data5 [31:0]
-out_ready
+关键时序风险：
+  6个32位加法直接串联，关键路径约 5 个加法器延迟，高频时序紧张。
 
-输出：
+---
 
-in_ready
-out_valid
-sum[31:0]
+题目 B：6路32位求和（两级流水版）
 
-要求：
+在题目A基础上，设计模块 sixLaneSum_pipe2，将加法拆成两级流水：
 
-当 in_valid && in_ready 时采样 6 个输入。
-计算 6 个 32-bit 数之和，结果输出到 sum。
-只有当结果有效时，out_valid=1。
-当下游未准备好（out_ready=0）时，结果必须保持不变，不能丢。
-说明这个电路可能有哪些时序风险。
-进一步说明：如果频率要求提高，你会如何插 pipeline。
+Stage 1：并行计算三个部分和
+  ps01 = in_data0 + in_data1
+  ps23 = in_data2 + in_data3
+  ps45 = in_data4 + in_data5
 
-面试常见追问：
+Stage 2：将三个部分和相加
+  sum = ps01 + ps23 + ps45
 
-6 个 32-bit 直接串行相加有什么问题？
-为什么会形成 critical path？
-你会怎么拆成两级或三级流水？
+每级之间用独立的 valid/ready 握手（s1_valid / s1_ready）解耦。
+
+端口定义（同题目A）：
+  输入：clk, rst_n, in_valid, in_data0~in_data5 [31:0], out_ready
+  输出：in_ready, out_valid, sum [31:0]
+
+握手关系：
+  in_ready  = ~s1_valid | s1_hs   （stage1缓冲空或同周期消费）
+  s1_ready  = ~out_valid | out_hs  （stage2缓冲空或同周期消费）
+
+面试追问：
+1. 为什么两级流水能改善时序？
+   → Stage1 关键路径：1个加法器延迟；Stage2：2个加法器延迟（总深度减半）
+2. Stage1和Stage2之间为什么需要握手？
+   → 下游背压时 Stage2 输出有效但无法消费，Stage1 不能覆盖 Stage2 的数据。
+3. 还能继续拆成三级吗？
+   → 可以，Stage1 保留3路并行，Stage2 做两路加，Stage3 做最后一加，关键路径降至1个加法器。
+
+---
+
+Question A: 6-Lane 32-bit Adder (Single-Cycle with Handshake)
+
+Module sixLaneSum_handshake: sum 6 inputs of 32 bits in one cycle with valid/ready handshake.
+
+Ports: clk, rst_n, in_valid, in_data0~5 [31:0], out_ready → in_ready, out_valid, sum [31:0]
+
+Behavior mirrors one_stage_buffer: in_ready = ~out_valid | out_hs.
+On in_hs: latch sum and assert out_valid.
+
+---
+
+Question B: 6-Lane 32-bit Adder (2-Stage Pipeline)
+
+Module sixLaneSum_pipe2: split the addition into two pipeline stages.
+
+Stage 1 (parallel pair sums): ps01=d0+d1, ps23=d2+d3, ps45=d4+d5
+Stage 2 (final sum): sum = ps01+ps23+ps45
+
+Inter-stage handshake: s1_valid / s1_ready decouples the two stages under backpressure.
+  in_ready = ~s1_valid | s1_hs
+  s1_ready = ~out_valid | out_hs
