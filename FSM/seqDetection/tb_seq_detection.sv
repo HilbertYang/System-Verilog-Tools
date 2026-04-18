@@ -1,114 +1,99 @@
-// HILBERT 04.16.2026
-// Testbench for seq_detection: sequence "1101" detector with overlap
-
 `timescale 1ns/1ps
 
 module tb_seq_detection;
 
-    // ── DUT signals ─────────────────────────────────────────────────
-    logic clk, rst_n, din, match;
+    localparam CLK_PERIOD = 10;
 
-    // ── DUT instantiation ────────────────────────────────────────────
+    logic clk, rst_n, data_in, detected;
+
     seq_detection dut (.*);
 
-    // ── Clock: 10ns period ───────────────────────────────────────────
     initial clk = 0;
-    always #5 clk = ~clk;
+    always #(CLK_PERIOD/2) clk = ~clk;
 
-    // ── Task: send one bit and check match ───────────────────────────
-    task send_bit(input logic bit_in, input logic expect_match);
-        din = bit_in;
+    int pass_count, fail_count;
+
+    // Drive one bit and check detected output
+    task automatic drive_and_check(
+        input logic  bit_in,
+        input logic  expect_detected,
+        input string label
+    );
+        data_in = bit_in;
         @(posedge clk); #1;
-        if (match !== expect_match) begin
-            $display("FAIL  din=%b  match=%b  expected=%b  time=%0t",
-                     bit_in, match, expect_match, $time);
+        if (detected === expect_detected) begin
+            $display("  PASS  [%s] data_in=%0b → detected=%0b", label, bit_in, detected);
+            pass_count++;
         end else begin
-            $display("PASS  din=%b  match=%b", bit_in, match);
+            $display("  FAIL  [%s] data_in=%0b → detected=%0b  (expected %0b)",
+                     label, bit_in, detected, expect_detected);
+            fail_count++;
         end
     endtask
 
-    // ── Task: apply async reset ──────────────────────────────────────
-    task apply_reset();
-        rst_n = 0;
-        @(posedge clk); #1;
-        if (match !== 0)
-            $display("FAIL  reset: match should be 0, got %b", match);
-        rst_n = 1;
-        @(posedge clk); #1;
-    endtask
-
-    // ── Main test ────────────────────────────────────────────────────
     initial begin
-        $dumpfile("tb_seq_detection.vcd");
-        $dumpvars(0, tb_seq_detection);
+        pass_count = 0; fail_count = 0;
+        $display("=== Sequence Detector 1011 Testbench ===");
 
-        rst_n = 1; din = 0;
-        apply_reset();
-
-        // ── Test 1: basic "1101" → single match ──────────────────────
-        $display("\n[Test 1] Basic: 1101");
-        send_bit(1, 0);
-        send_bit(1, 0);
-        send_bit(0, 0);
-        send_bit(1, 1);  // match here
-
-        // ── Test 2: overlap "1101101" → two matches ───────────────────
-        $display("\n[Test 2] Overlap: 1101101");
-        apply_reset();
-        send_bit(1, 0);
-        send_bit(1, 0);
-        send_bit(0, 0);
-        send_bit(1, 1);  // 1st match
-        send_bit(1, 0);
-        send_bit(0, 0);
-        send_bit(1, 1);  // 2nd match (overlap)
-
-        // ── Test 3: no false match on "1100" ─────────────────────────
-        $display("\n[Test 3] No match: 1100");
-        apply_reset();
-        send_bit(1, 0);
-        send_bit(1, 0);
-        send_bit(0, 0);
-        send_bit(0, 0);  // no match
-
-        // ── Test 4: repeated 1s before match "11101" ─────────────────
-        $display("\n[Test 4] Repeated 1s: 11101");
-        apply_reset();
-        send_bit(1, 0);
-        send_bit(1, 0);
-        send_bit(1, 0);  // stays in S2
-        send_bit(0, 0);
-        send_bit(1, 1);  // match
-
-        // ── Test 5: mid-stream async reset kills state ────────────────
-        $display("\n[Test 5] Mid-stream reset");
-        apply_reset();
-        send_bit(1, 0);
-        send_bit(1, 0);
-        send_bit(0, 0);
-        // reset before the final '1'
-        rst_n = 0; #3; rst_n = 1;
+        // reset
+        rst_n = 0; data_in = 0;
         @(posedge clk); #1;
-        send_bit(1, 0);  // state was reset, no match
+        rst_n = 1;
 
-        // ── Test 6: all-zeros stream → never match ────────────────────
-        $display("\n[Test 6] All zeros");
-        apply_reset();
-        repeat(8) send_bit(0, 0);
+        // ---- 1. Basic match: 1 0 1 1
+        $display("\n[1] Basic match: stream 1-0-1-1");
+        drive_and_check(1, 0, "1");
+        drive_and_check(0, 0, "0");
+        drive_and_check(1, 0, "1");
+        drive_and_check(1, 1, "1 → detect");
 
-        // ── Test 7: consecutive "1101" non-overlapping ────────────────
-        $display("\n[Test 7] Back-to-back 11011101 (no overlap between two)");
-        apply_reset();
-        send_bit(1, 0);
-        send_bit(1, 0);
-        send_bit(0, 0);
-        send_bit(1, 1);  // 1st match
-        send_bit(1, 0);  // start of 2nd, S2
-        send_bit(1, 0);  // still S2
-        send_bit(0, 0);
-        send_bit(1, 1);  // 2nd match
+        // ---- 2. No match: 1 0 1 0
+        $display("\n[2] No match: stream 1-0-1-0 (after reset)");
+        rst_n = 0; @(posedge clk); #1; rst_n = 1;
+        drive_and_check(1, 0, "1");
+        drive_and_check(0, 0, "0");
+        drive_and_check(1, 0, "1");
+        drive_and_check(0, 0, "0 → no detect");
 
-        $display("\n==== All tests done ====");
+        // ---- 3. Overlapping: 1 0 1 1 0 1 1
+        //   cycle 4: first  match (1011)
+        //   cycle 7: second match (1011, overlapping from the trailing "1")
+        $display("\n[3] Overlapping match: stream 1-0-1-1-0-1-1");
+        rst_n = 0; @(posedge clk); #1; rst_n = 1;
+        drive_and_check(1, 0, "1");
+        drive_and_check(0, 0, "0");
+        drive_and_check(1, 0, "1");
+        drive_and_check(1, 1, "1 → detect#1");
+        drive_and_check(0, 0, "0");
+        drive_and_check(1, 0, "1");
+        drive_and_check(1, 1, "1 → detect#2 (overlap)");
+
+        // ---- 4. All zeros: no match
+        $display("\n[4] All zeros: no match");
+        rst_n = 0; @(posedge clk); #1; rst_n = 1;
+        repeat(8) drive_and_check(0, 0, "0");
+
+        // ---- 5. All ones: no match (1111... never reaches 10)
+        $display("\n[5] All ones: no match");
+        rst_n = 0; @(posedge clk); #1; rst_n = 1;
+        repeat(8) drive_and_check(1, 0, "1");
+
+        // ---- 6. Reset mid-sequence clears state
+        $display("\n[6] Reset mid-sequence");
+        rst_n = 0; @(posedge clk); #1; rst_n = 1;
+        drive_and_check(1, 0, "1");
+        drive_and_check(0, 0, "0");
+        drive_and_check(1, 0, "1");
+        // reset before final bit
+        rst_n = 0; @(posedge clk); #1; rst_n = 1;
+        drive_and_check(1, 0, "1 after reset → no detect");
+
+        $display("\n==========================================");
+        $display("Result: %0d passed, %0d failed", pass_count, fail_count);
+        if (fail_count == 0)
+            $display("ALL TESTS PASSED");
+        else
+            $display("SOME TESTS FAILED");
         $finish;
     end
 

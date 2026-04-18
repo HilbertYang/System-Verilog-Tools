@@ -1,0 +1,82 @@
+题目：自动售货机控制器
+
+设计一个 Moore 型 FSM 模块，名为 vending_machine，模拟一台售卖15分钱商品的自动售货机。
+
+端口定义：
+  输入：
+    clk      — 时钟
+    rst_n    — 异步低电平复位
+    nickel   — 投入5分硬币（每拍只能投一种）
+    dime     — 投入10分硬币（每拍只能投一种）
+  输出：
+    dispense — 出货信号（高电平持续一个时钟周期）
+    change   — 找零信号，找回5分（高电平持续一个时钟周期）
+
+行为要求：
+1. 商品售价 15 分，接受 5分（nickel）和 10分（dime）两种硬币。
+2. 每个时钟周期最多投入一枚硬币（nickel 和 dime 不会同时为1）。
+3. 累计金额达到15分时出货（dispense=1），超过15分时同时找零5分（change=1）。
+4. 出货后下一拍自动回到初始状态（0分）。
+5. 复位后回到初始状态，所有输出清零。
+
+状态设计（Moore，共5个状态）：
+  S0  : 已投  0分 → dispense=0, change=0
+  S5  : 已投  5分 → dispense=0, change=0
+  S10 : 已投 10分 → dispense=0, change=0
+  S15 : 已投 15分 → dispense=1, change=0  （恰好够）
+  S20 : 已投 20分 → dispense=1, change=1  （多投了5分）
+
+状态转移：
+  S0  + nickel → S5
+  S0  + dime   → S10
+  S5  + nickel → S10
+  S5  + dime   → S15
+  S10 + nickel → S15
+  S10 + dime   → S20
+  S15 → S0  （出货，下一拍复位）
+  S20 → S0  （出货找零，下一拍复位）
+
+示例：
+  投入 dime + dime → S10 → S20 → dispense=1, change=1
+  投入 nickel + dime + nickel → S5 → S15 → dispense=1, change=0
+
+---
+
+Question: Vending Machine Controller
+
+Design a Moore FSM module named vending_machine that controls a vending machine
+selling items for 15 cents.
+
+Ports:
+  Inputs:
+    clk      — clock
+    rst_n    — asynchronous active-low reset
+    nickel   — insert a 5-cent coin (at most one coin type per cycle)
+    dime     — insert a 10-cent coin (at most one coin type per cycle)
+  Outputs:
+    dispense — item dispensed (high for one cycle)
+    change   — return 5-cent change (high for one cycle)
+
+Behavior:
+1. Item price is 15 cents; accepts nickels (5¢) and dimes (10¢).
+2. At most one coin is inserted per cycle (nickel and dime are never both 1).
+3. When accumulated amount reaches 15¢, assert dispense. If it exceeds 15¢, also assert change.
+4. After dispensing, return to S0 on the next cycle.
+5. After reset, return to S0 with all outputs deasserted.
+
+States (Moore, 5 states):
+  S0  :  0¢ accumulated → dispense=0, change=0
+  S5  :  5¢ accumulated → dispense=0, change=0
+  S10 : 10¢ accumulated → dispense=0, change=0
+  S15 : 15¢ accumulated → dispense=1, change=0
+  S20 : 20¢ accumulated → dispense=1, change=1
+
+Transitions:
+  S0  + nickel → S5
+  S0  + dime   → S10
+  S5  + nickel → S10
+  S5  + dime   → S15
+  S10 + nickel → S15
+  S10 + dime   → S20
+  S15 → S0  (auto-return after dispense)
+  S20 → S0  (auto-return after dispense+change)

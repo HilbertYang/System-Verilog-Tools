@@ -1,41 +1,73 @@
-1. 状态机题
+题目：序列检测器 "1011"（带重叠）
 
-题目：序列检测器（1101）
+设计一个 Moore 型 FSM 模块，名为 seq_detection，用于检测串行输入中的序列 "1011"。
+检测支持重叠：即上一个匹配的后缀可以作为下一个匹配的前缀。
 
-设计一个序列检测器，输入为 clk, rst_n, din，输出为 match。
+端口定义：
+  输入：
+    clk      — 时钟
+    rst_n    — 异步低电平复位
+    data_in  — 串行输入比特（每拍一位）
+  输出：
+    detected — 检测到完整序列时输出高电平（持续一个时钟周期）
+
+FSM 状态设计（Moore）：
+  S0：初始/复位状态，已匹配 ""
+  S1：已匹配 "1"
+  S2：已匹配 "10"
+  S3：已匹配 "101"
+  S4：已匹配 "1011" → detected = 1，下一拍根据 data_in 跳转
+
+状态转移（Moore，输出只与当前状态有关）：
+  S0 --1--> S1,  S0 --0--> S0
+  S1 --0--> S2,  S1 --1--> S1
+  S2 --1--> S3,  S2 --0--> S0
+  S3 --1--> S4,  S3 --0--> S2  (重叠：S3 收到0，回到S2)  ← 注意不是S0
+  S4 --1--> S1,  S4 --0--> S2  (上一匹配末尾"1"可作新序列起点)
 
 要求：
+1. 使用两段式或三段式 FSM 均可。
+2. detected 为寄存器输出（在进入 S4 的那拍置高）。
+3. 复位后回到 S0，detected = 0。
 
-当串行输入比特流中检测到序列 1101 时，match 拉高 1 个时钟周期。
-允许重叠检测。例如输入序列为 1101101，应该检测出两次。
-采用三段式状态机写法。
-复位为低有效异步复位。
-说明你的状态定义，以及为什么允许重叠时状态需要如何跳转。
+示例：
+  输入流：1 0 1 1 0 1 1
+  匹配位置（从1开始计）：第4拍（1011）、第7拍（1011，重叠）
 
-面试常见追问：
+---
 
-Moore 和 Mealy 你这里为什么选这个？
-如果要检测 1011，你怎么改？
-为什么三段式比一段式更适合面试手写？
+Question: Sequence Detector "1011" (with overlap)
 
-English Version:
+Design a Moore FSM module named seq_detection that detects the serial pattern "1011".
+Overlapping matches are supported (the suffix of one match can be the prefix of the next).
 
-1. FSM Question
+Ports:
+  Inputs:
+    clk      — clock
+    rst_n    — asynchronous active-low reset
+    data_in  — serial input bit (one bit per cycle)
+  Outputs:
+    detected — high for one cycle when the full sequence is detected
 
-Problem: Sequence Detector (1101)
+FSM states (Moore):
+  S0: idle / reset, matched ""
+  S1: matched "1"
+  S2: matched "10"
+  S3: matched "101"
+  S4: matched "1011" → detected = 1; next state depends on data_in
 
-Design a sequence detector with inputs clk, rst_n, and din, and output match.
+State transitions:
+  S0 --1--> S1,  S0 --0--> S0
+  S1 --0--> S2,  S1 --1--> S1
+  S2 --1--> S3,  S2 --0--> S0
+  S3 --1--> S4,  S3 --0--> S2  (overlap: "10" is valid prefix of next match)  ← NOT S0
+  S4 --1--> S1,  S4 --0--> S2
 
 Requirements:
+1. Two-always or three-always FSM style is acceptable.
+2. detected is a registered output (high in the cycle S4 is entered).
+3. After reset, return to S0 with detected = 0.
 
-When the serial input bit stream detects the sequence 1101, match should be asserted high for 1 clock cycle.
-Overlapping detection is allowed. For example, for the input sequence 1101101, the detector should report two matches.
-Use a three-process FSM coding style.
-Reset is an active-low asynchronous reset.
-Explain your state definitions, and describe how the state transitions should work to support overlapping detection.
-
-Common Interview Follow-up Questions:
-
-Why would you choose Moore or Mealy here?
-If the target sequence were changed to 1011, how would you modify the design?
-Why is the three-process FSM style more suitable than a one-process style for handwritten interview coding?
+Example:
+  Input stream : 1 0 1 1 0 1 1
+  Match cycles : cycle 4 (1011), cycle 7 (1011, overlapping)
