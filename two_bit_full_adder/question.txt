@@ -1,46 +1,59 @@
 题目：2位全加器
 
 设计一个2位全加器模块，名为 two_bit_full_adder。
+内部实例化一个1位全加器子模块 full_adder，将两个级联实现2位加法。
 
+---- 子模块 full_adder ----
+端口：
+  输入：a, b, cin
+  输出：sum, cout
+逻辑：
+  sum  = a ^ b ^ cin
+  cout = (a & b) | (b & cin) | (a & cin)
+
+---- 顶层模块 two_bit_full_adder ----
 端口定义：
   输入：
-    a     [1:0]  — 2位加数 A
-    b     [1:0]  — 2位加数 B
-    cin          — 进位输入
+    a   [1:0] — 2位加数 A
+    b   [1:0] — 2位加数 B
+    cin       — 进位输入
   输出：
-    sum   [1:0]  — 2位求和结果
-    cout         — 进位输出
+    sum [1:0] — 2位求和结果
+    cout      — 进位输出
 
 要求：
-1. 内部使用两个1位全加器（full_adder）级联实现，低位的 cout 连接高位的 cin。
-2. 最终的 cout 为高位全加器的进位输出。
-3. 使用结构化或行为级 RTL 均可，保持代码简洁。
+1. 实例化两个 full_adder：
+   - fa0：处理第0位，cin 接外部 cin，cout 接内部 carry
+   - fa1：处理第1位，cin 接 carry，cout 接外部 cout
+2. 纯组合逻辑，无时钟。
 
-示例：
-  a=2'b11, b=2'b01, cin=1 → sum=2'b01, cout=1   (3+1+1=5, 即 2'b01 进位1)
-  a=2'b10, b=2'b10, cin=0 → sum=2'b00, cout=1   (2+2=4,   即 2'b00 进位1)
+真值表示例：
+  a=2'b11, b=2'b01, cin=1 → sum=2'b01, cout=1  (3+1+1=5)
+  a=2'b10, b=2'b10, cin=0 → sum=2'b00, cout=1  (2+2=4)
+  a=2'b01, b=2'b01, cin=1 → sum=2'b11, cout=0  (1+1+1=3)
 
 ---
 
 Question: 2-Bit Full Adder
 
-Design a module named two_bit_full_adder.
+Design a 2-bit full adder module named two_bit_full_adder by instantiating
+two 1-bit full_adder submodules in a ripple-carry configuration.
 
+---- Submodule: full_adder ----
+Ports: a, b, cin → sum, cout
+Logic: sum = a^b^cin,  cout = (a&b)|(b&cin)|(a&cin)
+
+---- Top module: two_bit_full_adder ----
 Ports:
-  Inputs:
-    a     [1:0]  — 2-bit addend A
-    b     [1:0]  — 2-bit addend B
-    cin          — carry-in
-  Outputs:
-    sum   [1:0]  — 2-bit sum result
-    cout         — carry-out
+  Inputs : a[1:0], b[1:0], cin
+  Outputs: sum[1:0], cout
 
 Requirements:
-1. Implement using two cascaded 1-bit full adders (full_adder submodule),
-   where the carry-out of bit 0 feeds the carry-in of bit 1.
-2. The final cout is the carry-out of the bit-1 full adder.
-3. Behavioral or structural RTL is acceptable; keep the code interview-friendly.
+1. fa0 handles bit 0: cin=external cin,  cout=internal carry
+2. fa1 handles bit 1: cin=internal carry, cout=external cout
+3. Pure combinational logic, no clock.
 
 Examples:
-  a=2'b11, b=2'b01, cin=1 → sum=2'b01, cout=1   (3+1+1=5 → 101b)
-  a=2'b10, b=2'b10, cin=0 → sum=2'b00, cout=1   (2+2=4   → 100b)
+  a=2'b11, b=2'b01, cin=1 → sum=2'b01, cout=1  (3+1+1=5)
+  a=2'b10, b=2'b10, cin=0 → sum=2'b00, cout=1  (2+2=4)
+  a=2'b01, b=2'b01, cin=1 → sum=2'b11, cout=0  (1+1+1=3)

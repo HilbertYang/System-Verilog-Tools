@@ -1,9 +1,6 @@
 module full_adder (
-    input  logic a,
-    input  logic b,
-    input  logic cin,
-    output logic sum,
-    output logic cout
+    input  logic a, b, cin,
+    output logic sum, cout
 );
     assign sum  = a ^ b ^ cin;
     assign cout = (a & b) | (b & cin) | (a & cin);
@@ -11,8 +8,7 @@ endmodule
 
 
 module two_bit_full_adder (
-    input  logic [1:0] a,
-    input  logic [1:0] b,
+    input  logic [1:0] a, b,
     input  logic       cin,
     output logic [1:0] sum,
     output logic       cout
