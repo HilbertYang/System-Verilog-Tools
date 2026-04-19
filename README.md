@@ -1,78 +1,58 @@
-# SystemVerilog Learning Notes
+# SystemVerilog Learning, Practice, and Utility Modules
 
-This repository collects small SystemVerilog RTL exercises and interview-style practice problems.
-The current focus is valid/ready handshake design, small buffering modules, and simple datapath implementations that are easy to simulate with Icarus Verilog.
+This repository started as a personal workspace for learning SystemVerilog.
+Later, it also became a place to collect interview-style RTL problems and small reusable modules.
 
-## Repository Structure
+Many folders include a `question.txt` file that describes the problem statement, and each problem usually has a matching testbench so it can be used directly for practice.
+Several of these modules are also practical enough to be reused as small building blocks in real projects.
 
-```text
-System-Verilog-Tools/
-├── one_stage_buffer/
-│   ├── one_stage_buffer.sv
-│   ├── tb_one_stage_buffer.sv
-│   └── question.txt
-├── sixLaneSum_handshake/
-│   ├── sixLaneSum_handshake.sv
-│   ├── sixLaneSum_handshake_pipe2.sv
-│   ├── tb_sixLaneSum_handshake.sv
-│   └── question.txt
-├── clk_divider/
-│   └── clk_divider.v
-├── README.md
-└── CLAUDE.md
-```
+## What This Repo Is For
 
-## Directory Guide
+- learning and reviewing SystemVerilog RTL design
+- practicing interview questions with runnable testbenches
+- collecting small modules that can be reused in larger designs
 
-### `one_stage_buffer/`
+## Repository Layout
 
-Single-entry buffer with `valid/ready` handshake.
+Each topic is organized in its own folder. A typical folder may contain:
 
-- `one_stage_buffer.sv`: reference 1-stage buffer implementation
-- `tb_one_stage_buffer.sv`: simulation testbench
-- `question.txt`: interview prompt in Chinese and English
+- implementation file such as `*.sv`
+- `question.txt` with the problem description
+- `tb_*.sv` testbench for simulation and verification
+- `*_golden.sv` golden or reference implementation in some directories
 
-Key behavior:
-- accepts new data only on `in_valid && in_ready`
-- releases data only on `out_valid && out_ready`
-- supports same-cycle dequeue + enqueue
+Current topics in the repository include:
 
-### `sixLaneSum_handshake/`
+- `one_stage_buffer/`: single-stage valid/ready buffer
+- `sixLaneSum_handshake/`: handshake-based multi-input sum modules
+- `asynSynreset/`: async reset, sync release style logic
+- `fifo/`: FIFO-related exercises and utilities
+- `FSM/`: finite-state-machine practice problems
+- `two_bit_full_adder/`: basic combinational design practice
+- `clk_divider/`: clock divider examples
 
-Handshake-wrapped six-input 32-bit adder.
+## How To Use It
 
-- `sixLaneSum_handshake.sv`: single-cycle version
-- `sixLaneSum_handshake_pipe2.sv`: two-stage pipeline version
-- `tb_sixLaneSum_handshake.sv`: handshake-oriented testbench
-- `question.txt`: interview prompt in Chinese and English
+You can use this repository in two different ways:
 
-Key behavior:
-- six 32-bit inputs are accepted as one transaction
-- output is held with `out_valid` until downstream handshakes
-- back-to-back transfers are supported through `in_ready` / `out_ready` logic
-
-### `clk_divider/`
-
-Clock divider examples, including:
-- even divider
-- odd divider
-- generic wrapper divider
+1. As a practice set:
+   read `question.txt`, implement the module yourself, then run the matching testbench.
+2. As a utility collection:
+   take the small modules as references or directly adapt them into other RTL projects.
 
 ## Simulation
 
 ### Icarus Verilog
 
 ```bash
-# one-stage buffer
-iverilog -g2012 -o sim.vvp one_stage_buffer/one_stage_buffer.sv one_stage_buffer/tb_one_stage_buffer.sv
-vvp sim.vvp
-
-# six-lane handshake adder
-iverilog -g2012 -o sim.vvp sixLaneSum_handshake/sixLaneSum_handshake.sv sixLaneSum_handshake/tb_sixLaneSum_handshake.sv
-vvp sim.vvp
-
-# generic pattern
 iverilog -g2012 -o sim.vvp <design>.sv <testbench>.sv
+vvp sim.vvp
+```
+
+Example:
+
+```bash
+iverilog -g2012 -o sim.vvp one_stage_buffer/one_stage_buffer.sv one_stage_buffer/tb_one_stage_buffer.sv
 vvp sim.vvp
 ```
 
@@ -85,6 +65,6 @@ vsim -c work.<top_module> -do "run -all; quit"
 
 ## Notes
 
-- `question.txt` files are kept as interview-style design prompts.
-- The current handshake modules use helper signals such as `in_hs` and `out_hs` to mark completed transfers.
-- Generated files such as `*.vvp` are local simulation artifacts and not part of the design source.
+- `question.txt` is an important part of this repo. It records many interview-oriented design exercises collected during interview preparation.
+- Most practice problems have corresponding testbenches, so they are suitable for hands-on drills rather than just reading.
+- Some modules are intentionally small and focused, which also makes them convenient to reuse as real project utilities.

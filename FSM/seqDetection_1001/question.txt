@@ -1,0 +1,90 @@
+题目：序列检测器 —— "1001"（可重叠）
+
+设计一个 Moore 型有限状态机，模块名为 seq_detection_1001。
+在串行输入流 data_in 中检测序列 "1001"，允许重叠匹配。
+
+端口：
+  输入：clk        — 时钟（上升沿触发）
+        rst_n      — 低有效异步复位
+        data_in    — 串行输入，每周期 1 bit
+  输出：detected   — 高电平表示本周期完成一次匹配（Moore 输出）
+
+要求：
+1. 使用 Moore FSM，共 5 个状态：
+     S0：初始/无前缀
+     S1：已匹配 "1"
+     S2：已匹配 "10"
+     S3：已匹配 "100"
+     S4：已匹配 "1001" → detected = 1
+2. 允许重叠：检测到 "1001" 后，尾部 "1" 不可作为下一次的起点
+   （因为 "1001" 最长公共前后缀为空，S4 后继续从 data_in 重新计算）
+3. 状态寄存器使用 always_ff，复位后回到 S0
+4. detected 用 assign 输出（避免锁存器）
+
+状态转移表：
+  当前状态 | data_in=0 | data_in=1
+  ---------+-----------+----------
+  S0       |    S0     |    S1
+  S1       |    S2     |    S1
+  S2       |    S3     |    S1
+  S3       |    S0     |    S4
+  S4       |    S2     |    S1
+
+重叠示例：
+  输入流：1 0 0 1 0 0 1
+  检测点：          ^       ^   (第4位和第7位触发 detected=1)
+
+真值示例：
+  "1001"       → 第 4 拍 detected=1
+  "1000"       → 无检测
+  "11001"      → 第 5 拍 detected=1
+  "1001001"    → 第 4 拍和第 7 拍各检测一次（重叠）
+
+面试追问：
+  1. 为什么 S4 之后 data_in=0 转到 S2，而不是 S0？
+     — "1001" + "0" = "10010"，其中后缀 "10" 是 "1001" 的前缀，故转 S2。
+  2. Moore 与 Mealy 的区别？
+     — Moore 输出仅依赖当前状态；Mealy 输出还依赖输入，可早一拍输出但电路更复杂。
+  3. 如何用 KMP 失败函数推导状态转移？
+     — 构造 pattern 的 failure function，当不匹配时回退到 failure[j-1] 对应状态。
+
+---
+
+Question: Sequence Detector — "1001" (Overlapping)
+
+Design a Moore FSM named seq_detection_1001 that detects the bit pattern
+"1001" in a serial input stream, with overlapping matches allowed.
+
+Ports:
+  Inputs : clk (posedge), rst_n (active-low async reset), data_in (1 bit/cycle)
+  Output : detected — high in the cycle the 4th bit of a match is received
+
+Requirements:
+1. Moore FSM with 5 states:
+     S0: idle / no prefix matched
+     S1: matched "1"
+     S2: matched "10"
+     S3: matched "100"
+     S4: matched "1001" → detected = 1
+2. Overlapping allowed — after S4, transition based on the KMP failure function
+3. State register: always_ff with async reset to S0
+4. Output: assign detected = (curr == S4)  — no latch
+
+State transition table:
+  State | in=0 | in=1
+  ------+------+-----
+  S0    |  S0  |  S1
+  S1    |  S2  |  S1
+  S2    |  S3  |  S1
+  S3    |  S0  |  S4
+  S4    |  S2  |  S1
+
+Overlapping example:
+  Input : 1 0 0 1 0 0 1
+  Detect:         ^       ^   (detected=1 on bit 4 and bit 7)
+
+Examples:
+  "1001"    → detected on bit 4
+  "1000"    → no detection
+  "11001"   → detected on bit 5
+  "1001001" → detected on bits 4 and 7

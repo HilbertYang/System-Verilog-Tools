@@ -1,17 +1,82 @@
-5. 分频器 / 时钟题
+题目 A：二分频器
 
-题目：三分频，占空比 50%
+设计一个二分频模块 clk_div2。
+输入时钟 clk，低有效异步复位 rst_n，输出 clk_div2 频率为 clk 的 1/2，占空比 50%。
 
-输入时钟 clk，设计一个三分频输出 clk_div3，要求：
+端口：
+  输入：clk, rst_n
+  输出：clk_div2
 
-输出频率为输入的 1/3。
-占空比尽量接近 50%。
-允许同时使用上升沿和下降沿触发逻辑。
-复位为低有效异步复位 rst_n。
-写出实现思路，并说明为什么单用上升沿很难做到严格 50%。
+要求：
+  复位后输出为 0；每个上升沿翻转一次输出。
+
+---
+
+题目 B：三分频器（占空比 50%）
+
+设计一个三分频模块 clk_div3。
+输入时钟 clk，低有效异步复位 rst_n，输出 clk_div3 频率为 clk 的 1/3，占空比尽量接近 50%。
+
+端口：
+  输入：clk, rst_n
+  输出：clk_div3
+
+要求：
+1. 输出频率 = 输入频率 / 3
+2. 占空比严格 50%（高电平时间 = 低电平时间 = 1.5 个输入时钟周期）
+3. 允许同时使用上升沿和下降沿触发逻辑
+
+提示：
+  使用一个 2-bit 计数器 cnt（0→1→2→0...）；
+  pos_clk 在上升沿采样（cnt==0 时拉高，cnt==1 时拉低）；
+  neg_clk 在下降沿采样（cnt==1 时拉高，cnt==2 时拉低）；
+  clk_div3 = pos_clk | neg_clk
 
 面试常见追问：
+  1. 为什么单用上升沿很难做到严格 50%？
+     — 奇数分频时，高/低电平各需 1.5 周期，纯上升沿只能整数周期，所以占空比只能做到 1/3 或 2/3。
+  2. 如果面试官不允许用负边沿怎么办？
+     — 可以接受非 50% 占空比（如高 1 低 2），或者用两路计数器异相后 OR。
+  3. 这个 clk_div3 能不能直接当全局时钟用？
+     — 不推荐。pos_clk | neg_clk 组合逻辑路径会引入毛刺风险；
+       应使用 BUFG 或将结果送回 MMCM，通过时钟树驱动。
 
-如果面试官不允许用负边沿怎么办？
-奇数分频为什么难做 50% 占空比？
-这个 clk_div3 能不能直接当全局时钟用？为什么？
+---
+
+Question A: Divide-by-2 Clock
+
+Design a module clk_div2.
+Input: clk, active-low async reset rst_n.
+Output: clk_div2 at half the input frequency, 50% duty cycle.
+
+Requirements:
+  Output is 0 after reset; toggles on every rising edge of clk.
+
+---
+
+Question B: Divide-by-3 Clock (50% Duty Cycle)
+
+Design a module clk_div3.
+Input: clk, active-low async reset rst_n.
+Output: clk_div3 at one-third the input frequency, exactly 50% duty cycle.
+
+Requirements:
+1. Output frequency = input frequency / 3
+2. Strict 50% duty cycle (high = low = 1.5 input periods)
+3. Both rising- and falling-edge flip-flops are permitted
+
+Hint:
+  Use a 2-bit counter cnt cycling 0→1→2→0...
+  pos_clk sampled on posedge: set when cnt==0, clear when cnt==1
+  neg_clk sampled on negedge: set when cnt==1, clear when cnt==2
+  clk_div3 = pos_clk | neg_clk
+
+Interview follow-ups:
+  1. Why is strict 50% hard with only rising edges?
+     Odd division requires 1.5-cycle high/low periods; rising-edge-only FFs
+     produce integer-cycle phases, giving 1/3 or 2/3 duty cycle only.
+  2. What if the interviewer forbids negative-edge logic?
+     Accept non-50% (e.g., 1-high / 2-low), or use two offset counters OR'd together.
+  3. Can clk_div3 be used directly as a global clock?
+     Not recommended. The combinational OR introduces glitch risk;
+     route it through a BUFG or back into an MMCM for a clean clock tree.
