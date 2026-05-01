@@ -10,5 +10,6 @@ CLAUDE.md
 work/
 transcript
 vsim.wlf
+wlft*
 modelsim.ini
 *.wlf

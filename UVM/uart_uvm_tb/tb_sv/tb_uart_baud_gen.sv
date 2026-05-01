@@ -4,19 +4,28 @@ timeprecision 1ps;
 module tb_uart_baud_gen;
     logic clk;
     logic rst_n;
+    logic sample_tick;
     logic baud_tick;
 
-    localparam int CLK_FREQ  = 100_000_000;
-    localparam int BAUD_RATE = 115_200;
+    localparam int CLK_FREQ   = 160;
+    localparam int BAUD_RATE  = 10;
+    localparam int OVERSAMPLE = 16;
 
     uart_baud_gen #(
         .CLK_FREQ(CLK_FREQ),
-        .BAUD_RATE(BAUD_RATE)
+        .BAUD_RATE(BAUD_RATE),
+        .OVERSAMPLE(OVERSAMPLE)
     ) dut (
-        .clk       (clk),
-        .rst_n     (rst_n),
-        .baud_tick (baud_tick)
+        .clk         (clk),
+        .rst_n       (rst_n),
+        .sample_tick (sample_tick),
+        .baud_tick   (baud_tick)
     );
+
+    initial begin
+        $dumpfile("tb_uart_baud_gen.vcd");
+        $dumpvars(0, tb_uart_baud_gen);
+    end
 
     initial begin
         clk = 1'b0;
@@ -28,7 +37,7 @@ module tb_uart_baud_gen;
         repeat (2) @(posedge clk);
         rst_n = 1'b1;
 
-        repeat (2000) @(posedge clk);
+        repeat (80) @(posedge clk);
 
         $finish;
     end
