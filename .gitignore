@@ -5,3 +5,10 @@ CLAUDE.md
 # Icarus Verilog simulation outputs
 *.vvp
 *.vcd
+
+# QuestaSim / ModelSim simulation outputs
+work/
+transcript
+vsim.wlf
+modelsim.ini
+*.wlf
