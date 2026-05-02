@@ -7,7 +7,7 @@ module tb_uart_baud_gen;
     logic sample_tick;
     logic baud_tick;
 
-    localparam int CLK_FREQ   = 160;
+    localparam int CLK_FREQ   = 1600;
     localparam int BAUD_RATE  = 10;
     localparam int OVERSAMPLE = 16;
 
@@ -37,7 +37,7 @@ module tb_uart_baud_gen;
         repeat (2) @(posedge clk);
         rst_n = 1'b1;
 
-        repeat (80) @(posedge clk);
+        repeat (1000) @(posedge clk);
 
         $finish;
     end

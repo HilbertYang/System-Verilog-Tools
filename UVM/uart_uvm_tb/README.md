@@ -8,13 +8,15 @@ verifying it with SystemVerilog and UVM on QuestaSim.
 - `rtl/uart_baud_gen.sv`: baud tick generator
 - `rtl/uart_tx.sv`: UART transmitter
 - `rtl/uart_rx.sv`: UART receiver
-- `rtl/uart_controller.sv`: top-level UART controller skeleton
+- `rtl/uart_controller.sv`: top-level UART controller
 - `tb_sv/tb_uart_baud_gen.sv`: simple SystemVerilog testbench for the baud generator
 - `tb_sv/tb_uart_tx.sv`: simple SystemVerilog testbench for TX
 - `tb_sv/tb_uart_rx.sv`: simple SystemVerilog testbench for RX
+- `tb_sv/tb_uart_controller.sv`: loopback integration testbench
 
-The current milestone is to verify the baud generator, TX, and RX with plain SV
-testbenches before moving on to the UVM environment.
+The current milestone is to verify the baud generator, TX, RX, and integrated
+controller loopback with plain SV testbenches before moving on to the UVM
+environment.
 
 The baud generator provides both a 1x `baud_tick` for TX bit transitions and a
 16x `sample_tick` for RX oversampling. The RX samples the start bit near its
@@ -53,4 +55,14 @@ Dedicated TX/RX scripts are also available:
 ```powershell
 vsim -do run_tx.do
 vsim -do run_rx.do
+vsim -do run_controller.do
+```
+
+## Run UVM TX Test
+
+The first UVM test verifies `uart_tx` only. It drives `tx_valid/tx_data`,
+monitors the serial `tx` waveform, and compares decoded bytes in the scoreboard.
+
+```powershell
+vsim -do run_uvm.do
 ```

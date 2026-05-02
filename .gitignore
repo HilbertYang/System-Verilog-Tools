@@ -13,3 +13,9 @@ vsim.wlf
 wlft*
 modelsim.ini
 *.wlf
+vsim_stacktrace.vstf
+
+# Editor backup/swap files
+*.swp
+*.un~
+*~

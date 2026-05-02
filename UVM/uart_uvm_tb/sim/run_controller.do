@@ -7,9 +7,9 @@ if {[file exists work]} {
 vlib work
 vmap work work
 
-vlog -sv -f filelist_rx.f
+vlog -sv -f filelist_controller.f
 
-vsim -voptargs=+acc work.tb_uart_rx
+vsim -voptargs=+acc work.tb_uart_controller
 
 log -r /*
 add wave -r /*

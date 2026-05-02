@@ -11,5 +11,6 @@ vlog -sv -f filelist_sv.f
 
 vsim -voptargs=+acc work.tb_uart_baud_gen
 
+log -r /*
 add wave -r /*
 run -all
