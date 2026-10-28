@@ -1,0 +1,20 @@
+题目：无符号逐位恢复除法器
+
+设计一个可参数化模块 unsigned_restoring_divider，计算：
+
+  quotient  = dividend / divisor
+  remainder = dividend % divisor
+
+接口要求：
+1. dividend、divisor、quotient、remainder 均为 DATA_WIDTH 位无符号数。
+2. start=1 且 ready=1 的上升沿接受一组输入。
+3. 非零除法执行期间 busy=1，共进行 DATA_WIDTH 次逐位迭代。
+4. 结果完成时 done 拉高一个时钟周期，quotient 和 remainder 同时有效。
+5. busy=1 时忽略新的 start 请求。
+6. divisor=0 时：quotient=0、remainder=dividend、div_by_zero=1。
+7. 使用逐位恢复除法算法，每周期只使用一次移位、比较和减法运算。
+
+默认参数：
+
+  DATA_WIDTH = 8
+

@@ -1,0 +1,33 @@
+题目：三路除法结果求和
+
+实现以下无符号运算：
+
+  out = a / b + c / d + e / f
+
+参数与接口约定：
+1. a、b、c、d、e、f 均为 DATA_WIDTH 位无符号数，默认 DATA_WIDTH=16。
+2. out 为 DATA_WIDTH+2 位，能够容纳三个最大商的求和结果。
+3. 输入和输出均使用 valid/ready 握手。
+4. 除数为 0 时，对应商按 0 处理，并在结果有效时置 div_by_zero=1。
+5. out 和 div_by_zero 在 out_valid=1 且 out_ready=0 时必须保持稳定。
+
+要求分别实现两种架构：
+
+方案一：资源最小化（div_sum_area_min）
+- 实例化一个 unsigned_restoring_divider，依次计算 a/b、c/d、e/f。
+- 三次除法共用一套移位、比较和减法数据通路。
+- 使用累加器保存中间结果。
+- 每次除法需要 DATA_WIDTH 个迭代周期，外层状态机还会产生启动和结果交接周期。
+- 该方案延迟较大，但只需要一个迭代除法器。
+
+方案二：速度最大化（div_sum_speed_max）
+- 同时计算 a/b、c/d、e/f，综合时推导三套并行除法器。
+- 第一级寄存三个商，第二级使用加法树求和并寄存输出。
+- 两级均支持 valid/ready 背压，可连续接收输入。
+- 流水充满且下游持续 ready 时，吞吐率为每时钟周期一组结果。
+
+说明：
+- RTL 中的 / 运算符是否映射为组合逻辑、流水线或厂商除法 IP，由综合工具决定。
+- 对最高时钟频率要求严格时，可将速度方案中的三个 / 运算替换为相同延迟的全流水除法 IP。
+- 编译面积方案时需要同时编译 IP/unsigned_divider/unsigned_restoring_divider.sv。
+
