@@ -1,66 +1,42 @@
-题目：同步 FIFO
+# Verilog Interview Problem: Synchronous FIFO
 
-设计一个同步 FIFO 模块，名为 syn_fifo。
+Design an **8-entry, 8-bit synchronous FIFO** in synthesizable Verilog.
 
-参数：
-  DATA_WIDTH  — 数据位宽，默认 8
-  DEPTH       — FIFO 深度（条目数），默认 8（必须为2的幂次）
+## Interface
 
-端口定义：
-  输入：
-    clk          — 时钟
-    rst_n        — 异步低电平复位
-    wr_en        — 写使能
-    wr_data      — 写数据 [DATA_WIDTH-1:0]
-    rd_en        — 读使能
-  输出：
-    rd_data      — 读数据 [DATA_WIDTH-1:0]
-    full         — FIFO 满标志
-    empty        — FIFO 空标志
+```verilog
+module syn_fifo (
+    input  wire       clk,
+    input  wire       rst_n,
+    input  wire       wr_en,
+    input  wire       rd_en,
+    input  wire [7:0] wr_data,
+    output reg  [7:0] rd_data,
+    output wire       full,
+    output wire       empty
+);
+```
 
-行为要求：
-1. 写操作：wr_en=1 且 full=0 时，将 wr_data 写入当前写指针位置，写指针自增。
-2. 读操作：rd_en=1 且 empty=0 时，从当前读指针位置读出数据，读指针自增。
-3. 同一周期可以同时读写（wr_en=1 且 rd_en=1），FIFO 深度不变。
-4. full  = (写指针超前读指针恰好 DEPTH 个位置)
-   empty = (写指针 == 读指针)
-5. 使用"额外高位"法判断满/空（指针位宽为 $clog2(DEPTH)+1）。
-6. rd_data 为同步读出（寄存器输出）。
+## Requirements
 
-示例时序（DEPTH=4）：
-  复位后：empty=1, full=0
-  写入 A,B,C,D → full=1
-  读出 A → full=0, rd_data=A
-  再写入 E → full=1
+- Use an **active-low synchronous reset**. Reset empties the FIFO and sets
+  `rd_data` to zero. Reset takes priority over reads and writes.
+- All reads and writes occur on the rising edge of `clk`.
+- An accepted write appends `wr_data` to the FIFO.
+- An accepted read removes the oldest entry and updates `rd_data`.
+  Otherwise, `rd_data` holds its previous value.
+- A read is accepted only when `rd_en` is asserted and the FIFO is nonempty
+  before the clock edge.
+- A write is accepted only when `wr_en` is asserted and either the FIFO is
+  not full before the clock edge or a read is accepted on the same edge.
+- When both enables are asserted:
+  - If empty, accept only the write; do not forward the new data to `rd_data`.
+  - If full, accept both operations; the read must return the oldest stored
+    entry.
+  - Otherwise, accept both operations.
+- `full` and `empty` must reflect the current FIFO occupancy.
 
----
+## Task
 
-Question: Synchronous FIFO
-
-Design a module named syn_fifo.
-
-Parameters:
-  DATA_WIDTH  — data bus width, default 8
-  DEPTH       — number of entries, default 8 (must be a power of two)
-
-Ports:
-  Inputs:
-    clk          — clock
-    rst_n        — asynchronous active-low reset
-    wr_en        — write enable
-    wr_data      — write data [DATA_WIDTH-1:0]
-    rd_en        — read enable
-  Outputs:
-    rd_data      — read data [DATA_WIDTH-1:0]
-    full         — FIFO full flag
-    empty        — FIFO empty flag
-
-Behavior:
-1. Write: when wr_en=1 and full=0, write wr_data at the write pointer, then increment it.
-2. Read:  when rd_en=1 and empty=0, output data at the read pointer, then increment it.
-3. Simultaneous read and write in the same cycle is allowed; depth stays the same.
-4. full  = write pointer leads read pointer by exactly DEPTH positions.
-   empty = write pointer == read pointer.
-5. Use the "extra MSB" technique for full/empty detection
-   (pointer width = $clog2(DEPTH)+1).
-6. rd_data is a registered (synchronous) output.
+Implement the module. Be prepared to explain pointer wraparound and how
+simultaneous reads and writes affect occupancy.

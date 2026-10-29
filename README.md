@@ -30,6 +30,8 @@ Current topics in the repository include:
 - `FSM/`: finite-state-machine practice problems
 - `two_bit_full_adder/`: basic combinational design practice
 - `clk_divider/`: clock divider examples
+- `divider_sum/`: area-optimized and throughput-optimized implementations of `a/b + c/d + e/f`
+- `unsigned_divider/`: standalone iterative divider with quotient and remainder outputs
 
 ## How To Use It
 
