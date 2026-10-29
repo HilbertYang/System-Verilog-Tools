@@ -1,0 +1,48 @@
+# Verilog Interview Problem: 4-Request Round-Robin Arbiter
+
+Design a synthesizable arbiter that allows four requesters to share one resource fairly.
+
+## Interface
+
+```systemverilog
+module rr_arbiter (
+    input  logic       clk,
+    input  logic       rst_n,
+    input  logic [3:0] req,
+    input  logic       ready,
+    output logic [3:0] grant
+);
+```
+
+## Requirements
+
+- Use an **active-low synchronous reset**.
+- `req[i]` indicates that requester `i` wants to use the resource.
+- `grant` is a **combinational, one-hot-or-zero** output:
+  - If no requests are active, `grant` must be zero.
+  - Otherwise, grant exactly one active requester.
+  - Never grant a requester whose request bit is zero.
+- After reset, the priority order is **0 -> 1 -> 2 -> 3**.
+- Select the first active requester in the current priority order, wrapping around when necessary.
+- A transfer is accepted on a rising clock edge when `ready` is high and a grant is present.
+- After an accepted transfer from requester `i`, requester `(i + 1) modulo 4` becomes the highest priority.
+- If no transfer is accepted, keep the priority unchanged.
+- `ready` must **not gate the grant output**. A requester may receive a grant while `ready` is low.
+- Each accepted transfer uses the resource for one cycle; no transaction locking is required.
+
+## Example
+
+Assume reset has completed and `req` stays at `4'b1111`. The values below are observed immediately before each rising edge:
+
+| Clock edge | `ready` | `grant` | Accepted requester |
+|---|---|---|---|
+| 1 | 1 | `0001` | 0 |
+| 2 | 0 | `0010` | None |
+| 3 | 1 | `0010` | 1 |
+| 4 | 1 | `0100` | 2 |
+| 5 | 1 | `1000` | 3 |
+| 6 | 1 | `0001` | 0 |
+
+## Task
+
+Implement the module. Be prepared to explain why a continuously requesting client cannot be starved when transfers continue to be accepted.
