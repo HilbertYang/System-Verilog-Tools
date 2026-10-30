@@ -1,0 +1,59 @@
+# Verilog Interview Problem: 8-to-32-Bit Stream Packer
+
+Design a synthesizable module that collects four input bytes and combines them into one 32-bit output word. Both interfaces use a **valid/ready handshake**.
+
+## Interface
+
+```systemverilog
+module stream_packer (
+    input  logic        clk,
+    input  logic        rst_n,
+
+    input  logic [7:0]  in_data,
+    input  logic        in_valid,
+    output logic        in_ready,
+
+    output logic [31:0] out_data,
+    output logic        out_valid,
+    input  logic        out_ready
+);
+```
+
+## Requirements
+
+- Use an **active-low synchronous reset**. Reset discards all buffered data, clears `out_valid`, and sets `out_data` to zero.
+- An input byte is accepted on a rising clock edge when `in_valid && in_ready`.
+- An output word is transferred on a rising clock edge when `out_valid && out_ready`.
+- Pack bytes in arrival order:
+  - First byte -> `out_data[7:0]`
+  - Second byte -> `out_data[15:8]`
+  - Third byte -> `out_data[23:16]`
+  - Fourth byte -> `out_data[31:24]`
+- Assert `out_valid` immediately after the edge that accepts the fourth byte. Partial words must never be marked valid.
+- Input gaps are allowed. Preserve previously accepted bytes while waiting for the remaining bytes.
+- Support one buffered word:
+  - While collecting a partial word, `in_ready` must be high, regardless of `out_ready`.
+  - While a complete word is pending and `out_ready` is low, `in_ready` must be low.
+  - While `out_valid && !out_ready`, keep both `out_valid` and `out_data` stable.
+- Allow an output transfer and an input acceptance on the **same edge**. In this case, the accepted input byte becomes the **first byte of the next word**.
+- When `out_valid` is low, the value of `out_data` is unspecified except immediately after reset.
+- Preserve every accepted byte without loss, duplication, or reordering.
+
+## Example
+
+The accepted input bytes:
+
+```text
+11, 22, 33, 44, AA, BB, CC, DD
+```
+
+must produce these output words, in order:
+
+```text
+32'h44332211
+32'hDDCCBBAA
+```
+
+## Task
+
+Implement the module. Be prepared to explain what happens when the fourth byte arrives while `out_ready` is low, and when an output transfer coincides with the first byte of the next word.
