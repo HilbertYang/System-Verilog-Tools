@@ -1,0 +1,58 @@
+# Verilog Interview Problem: Programmable Watchdog Timer
+
+Design a synthesizable watchdog timer that expires if it is not kicked within a programmable number of clock cycles.
+
+## Interface
+
+```systemverilog
+module watchdog_timer (
+    input  logic       clk,
+    input  logic       rst_n,
+    input  logic       enable,
+    input  logic       kick,
+    input  logic [7:0] cfg_timeout,
+
+    output logic       active,
+    output logic       timeout_pulse,
+    output logic       expired
+);
+```
+
+## Requirements
+
+- Use an **active-low synchronous reset**. Reset clears all three outputs and discards any pending timeout.
+- When `enable=0` at a rising edge, disable the timer and clear all three outputs. Ignore `kick` while disabled.
+- On the first rising edge with `enable=1` after reset or a disabled cycle, arm the timer:
+  - Sample `cfg_timeout` as the timeout interval `N`.
+  - Treat `cfg_timeout=0` as `N=1`.
+  - Set `active=1` and clear `expired`.
+- While `enable=1`, every rising edge with `kick=1` starts a fresh interval, even if the timer has already expired:
+  - Sample `cfg_timeout` again.
+  - Set `active=1` and clear `expired` and `timeout_pulse`.
+- The arming or kicking edge does **not** count as an elapsed cycle. Without another kick, expire on the **Nth subsequent rising edge**.
+- On expiration:
+  - Assert `timeout_pulse` for exactly one clock cycle.
+  - Set `expired=1` and clear `active`.
+- After expiration, remain inactive with `expired=1`. Do not automatically restart or generate additional timeout pulses.
+- Clear `timeout_pulse` on the next rising edge unless a reset or disable has already cleared it.
+- Changes to `cfg_timeout` have no effect on the current interval. Use its value only when arming or kicking.
+- A kick on the edge that would otherwise cause expiration must **prevent expiration** and restart the interval.
+- Apply this priority: **reset > disable > kick > normal timer operation**.
+
+## Example
+
+Assume `cfg_timeout=3`. Edge A is the first enabled edge after reset. There are no kicks, and `enable` remains high. Values below are observed immediately after each edge:
+
+| Edge | Event | `active` | `timeout_pulse` | `expired` |
+|---|---|---|---|---|
+| A | Arm the timer | 1 | 0 | 0 |
+| A+1 | First elapsed cycle | 1 | 0 | 0 |
+| A+2 | Second elapsed cycle | 1 | 0 | 0 |
+| A+3 | Third elapsed cycle: expire | 0 | 1 | 1 |
+| A+4 | Remain expired | 0 | 0 | 1 |
+
+If `kick=1` at A+3 instead, do not expire. Start a fresh interval at that edge; with no further kicks, expiration occurs at A+6.
+
+## Task
+
+Implement the module. Be prepared to explain the cases `cfg_timeout=0`, `cfg_timeout=1`, a kick on the expiration edge, and a configuration change during an active interval.
