@@ -1,0 +1,57 @@
+# Verilog Interview Problem: 8-Bit Unsigned Iterative Multiplier
+
+Design a synthesizable module that multiplies two unsigned 8-bit operands over multiple clock cycles and produces a 16-bit result.
+
+## Interface
+
+```systemverilog
+module iterative_multiplier (
+    input  logic        clk,
+    input  logic        rst_n,
+    input  logic        start,
+    input  logic [7:0]  a,
+    input  logic [7:0]  b,
+
+    output logic        busy,
+    output logic        done,
+    output logic [15:0] product
+);
+```
+
+## Requirements
+
+- Use an **active-low synchronous reset**. Reset clears `busy`, `done`, and `product`, and cancels any operation in progress.
+- Accept a new operation on a rising edge when `start=1` and `busy=0` immediately before that edge.
+- On acceptance, capture both operands and assert `busy`. Later changes to `a` or `b` must not affect the operation.
+- Implement multiplication iteratively, processing one bit of the captured multiplier per cycle. Do not use the `*` operator.
+- Complete every operation in **exactly eight processing cycles**, including when an operand is zero. The acceptance edge is not a processing cycle.
+- If an operation is accepted at edge A, update `product`, assert `done`, and deassert `busy` immediately after edge A+8.
+- Keep `product` unchanged until completion. It must retain the previous result while a new operation is running and while idle.
+- Assert `done` for exactly one clock cycle on completion, then clear it on the next rising edge.
+- Ignore `start` while `busy=1`; do not queue requests.
+- A request on the completion edge is also ignored because `busy` was high before that edge. The earliest next acceptance edge is A+9.
+- If `start` remains high, accept another operation at the next eligible idle edge.
+- Both operands and the result are unsigned.
+
+## Example
+
+Assume `a=13` and `b=11` when the operation is accepted at edge A. Assume `start=0` after acceptance and no reset occurs. Values below are observed immediately after each edge:
+
+| Edge | `busy` | `done` | `product` |
+|---|---|---|---|
+| A | 1 | 0 | Previous result |
+| A+1 through A+7 | 1 | 0 | Previous result |
+| A+8 | 0 | 1 | `16'd143` |
+| A+9 | 0 | 0 | `16'd143` |
+
+Additional expected results:
+
+```text
+0   x 255 = 0
+1   x 255 = 255
+255 x 255 = 65025 = 16'hFE01
+```
+
+## Task
+
+Implement the module. Be prepared to explain operand capture, the eight-cycle latency, how the final processing cycle contributes to the result, and how requests are handled while busy.
