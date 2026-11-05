@@ -1,0 +1,15 @@
+VCD info: dumpfile moving_sum4_recheck.vcd opened for output.
+BEFORE t=25.000 ns valid=1 data=10 out=0 out_valid=0
+AFTER  t=25.001 ns valid=1 data=10 out=0 out_valid=0 expected=0/0 accepted=1
+BEFORE t=35.000 ns valid=1 data=20 out=0 out_valid=0
+AFTER  t=35.001 ns valid=1 data=20 out=0 out_valid=0 expected=0/0 accepted=2
+BEFORE t=45.000 ns valid=1 data=30 out=0 out_valid=0
+AFTER  t=45.001 ns valid=1 data=30 out=0 out_valid=0 expected=0/0 accepted=3
+BEFORE t=55.000 ns valid=1 data=40 out=0 out_valid=0
+AFTER  t=55.001 ns valid=1 data=40 out=100 out_valid=1 expected=100/1 accepted=4
+BEFORE t=65.000 ns valid=1 data=50 out=100 out_valid=1
+AFTER  t=65.001 ns valid=1 data=50 out=140 out_valid=1 expected=140/1 accepted=5
+BEFORE t=75.000 ns valid=0 data=50 out=140 out_valid=1
+AFTER  t=75.001 ns valid=0 data=50 out=140 out_valid=0 expected=140/0 accepted=5
+SUMMARY: 0 output checks failed.
+tb_moving_sum4_continuous.sv:76: $finish called at 80001 (1ps)

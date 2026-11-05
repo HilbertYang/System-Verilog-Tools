@@ -1,0 +1,19 @@
+VCD info: dumpfile moving_sum4_continuous.vcd opened for output.
+BEFORE t=25.000 ns valid=1 data=10 cnt=0 buff=[0,0,0] hold=0 out=0 out_valid=0
+AFTER  t=25.001 ns valid=1 data=10 cnt=1 buff=[0,0,10] hold=0 out=0 out_valid=0 expected=0/0 accepted=1
+BEFORE t=35.000 ns valid=1 data=20 cnt=1 buff=[0,0,10] hold=0 out=0 out_valid=0
+AFTER  t=35.001 ns valid=1 data=20 cnt=2 buff=[0,10,20] hold=0 out=0 out_valid=0 expected=0/0 accepted=2
+BEFORE t=45.000 ns valid=1 data=30 cnt=2 buff=[0,10,20] hold=0 out=0 out_valid=0
+AFTER  t=45.001 ns valid=1 data=30 cnt=3 buff=[10,20,30] hold=0 out=90 out_valid=1 expected=0/0 accepted=3
+MISMATCH: observed sum/valid=90/1, expected=0/0
+BEFORE t=55.000 ns valid=1 data=40 cnt=3 buff=[10,20,30] hold=0 out=100 out_valid=1
+AFTER  t=55.001 ns valid=1 data=40 cnt=3 buff=[20,30,40] hold=100 out=130 out_valid=1 expected=100/1 accepted=4
+MISMATCH: observed sum/valid=130/1, expected=100/1
+BEFORE t=65.000 ns valid=1 data=50 cnt=3 buff=[20,30,40] hold=100 out=140 out_valid=1
+AFTER  t=65.001 ns valid=1 data=50 cnt=3 buff=[30,40,50] hold=140 out=170 out_valid=1 expected=140/1 accepted=5
+MISMATCH: observed sum/valid=170/1, expected=140/1
+BEFORE t=75.000 ns valid=0 data=50 cnt=3 buff=[30,40,50] hold=140 out=140 out_valid=0
+AFTER  t=75.001 ns valid=0 data=50 cnt=3 buff=[30,40,50] hold=140 out=140 out_valid=0 expected=140/0 accepted=5
+SUMMARY: 3 output checks failed.
+FATAL: tb_moving_sum4_continuous.sv:81: Current RTL does not match the problem's post-edge outputs; inspect the VCD.
+       Time: 80001  Scope: tb_moving_sum4_continuous

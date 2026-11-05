@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="999" viewBox="0 0 1800 999">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:Menlo,Consolas,monospace;fill:#243344} .small{font-size:14px} .label{font-size:17px}</style>
+<text x="30" y="39" font-size="25" font-weight="bold">moving_sum4: continuous-input reproduction</text>
+<text x="30" y="68" font-size="16">Inputs change on falling edges; register updates occur at rising edges. All bus values are decimal.</text>
+<text x="30" y="93" font-size="16">Actual traces come from Icarus VCD. Expected outputs are checked 1 ps after each rising edge.</text>
+<rect x="1187.857142857143" y="126" width="42.85714285714289" height="713" fill="#fff0cf"/>
+<line x1="245.0" y1="130" x2="245.0" y2="839" stroke="#dde3eb"/>
+<text x="245.0" y="119" text-anchor="middle" class="small">10</text>
+<line x1="352.1428571428571" y1="130" x2="352.1428571428571" y2="839" stroke="#dde3eb"/>
+<text x="352.1428571428571" y="119" text-anchor="middle" class="small">15</text>
+<line x1="459.2857142857143" y1="130" x2="459.2857142857143" y2="839" stroke="#dde3eb"/>
+<text x="459.2857142857143" y="119" text-anchor="middle" class="small">20</text>
+<line x1="566.4285714285713" y1="130" x2="566.4285714285713" y2="839" stroke="#dde3eb"/>
+<text x="566.4285714285713" y="119" text-anchor="middle" class="small">25</text>
+<line x1="673.5714285714286" y1="130" x2="673.5714285714286" y2="839" stroke="#dde3eb"/>
+<text x="673.5714285714286" y="119" text-anchor="middle" class="small">30</text>
+<line x1="780.7142857142858" y1="130" x2="780.7142857142858" y2="839" stroke="#dde3eb"/>
+<text x="780.7142857142858" y="119" text-anchor="middle" class="small">35</text>
+<line x1="887.8571428571428" y1="130" x2="887.8571428571428" y2="839" stroke="#dde3eb"/>
+<text x="887.8571428571428" y="119" text-anchor="middle" class="small">40</text>
+<line x1="995.0" y1="130" x2="995.0" y2="839" stroke="#dde3eb"/>
+<text x="995.0" y="119" text-anchor="middle" class="small">45</text>
+<line x1="1102.142857142857" y1="130" x2="1102.142857142857" y2="839" stroke="#dde3eb"/>
+<text x="1102.142857142857" y="119" text-anchor="middle" class="small">50</text>
+<line x1="1209.2857142857142" y1="130" x2="1209.2857142857142" y2="839" stroke="#dde3eb"/>
+<text x="1209.2857142857142" y="119" text-anchor="middle" class="small">55</text>
+<line x1="1316.4285714285716" y1="130" x2="1316.4285714285716" y2="839" stroke="#dde3eb"/>
+<text x="1316.4285714285716" y="119" text-anchor="middle" class="small">60</text>
+<line x1="1423.5714285714284" y1="130" x2="1423.5714285714284" y2="839" stroke="#dde3eb"/>
+<text x="1423.5714285714284" y="119" text-anchor="middle" class="small">65</text>
+<line x1="1530.7142857142856" y1="130" x2="1530.7142857142856" y2="839" stroke="#dde3eb"/>
+<text x="1530.7142857142856" y="119" text-anchor="middle" class="small">70</text>
+<line x1="1637.857142857143" y1="130" x2="1637.857142857143" y2="839" stroke="#dde3eb"/>
+<text x="1637.857142857143" y="119" text-anchor="middle" class="small">75</text>
+<line x1="1745.0" y1="130" x2="1745.0" y2="839" stroke="#dde3eb"/>
+<text x="1745.0" y="119" text-anchor="middle" class="small">80</text>
+<text x="1758" y="119" class="small">ns</text>
+<line x1="566.4285714285713" y1="130" x2="566.4285714285713" y2="839" stroke="#bd9254" stroke-dasharray="3 5"/>
+<text x="566.4285714285713" y="99" text-anchor="middle" class="small">sample 1</text>
+<line x1="780.7142857142858" y1="130" x2="780.7142857142858" y2="839" stroke="#bd9254" stroke-dasharray="3 5"/>
+<text x="780.7142857142858" y="99" text-anchor="middle" class="small">sample 2</text>
+<line x1="995.0" y1="130" x2="995.0" y2="839" stroke="#bd9254" stroke-dasharray="3 5"/>
+<text x="995.0" y="99" text-anchor="middle" class="small">sample 3</text>
+<line x1="1209.2857142857142" y1="130" x2="1209.2857142857142" y2="839" stroke="#bd9254" stroke-dasharray="3 5"/>
+<text x="1209.2857142857142" y="99" text-anchor="middle" class="small">sample 4</text>
+<line x1="1423.5714285714284" y1="130" x2="1423.5714285714284" y2="839" stroke="#bd9254" stroke-dasharray="3 5"/>
+<text x="1423.5714285714284" y="99" text-anchor="middle" class="small">sample 5</text>
+<rect x="12" y="146" width="1760" height="53" fill="#f3f6fa" fill-opacity="0.6"/>
+<text x="20" y="173" class="label">clk</text>
+<polyline points="245.0,183 352.1428571428571,183 352.1428571428571,156 459.2857142857143,156 459.2857142857143,183 566.4285714285713,183 566.4285714285713,156 673.5714285714286,156 673.5714285714286,183 780.7142857142858,183 780.7142857142858,156 887.8571428571428,156 887.8571428571428,183 995.0,183 995.0,156 1102.142857142857,156 1102.142857142857,183 1209.2857142857142,183 1209.2857142857142,156 1316.4285714285716,156 1316.4285714285716,183 1423.5714285714284,183 1423.5714285714284,156 1530.7142857142856,156 1530.7142857142856,183 1637.857142857143,183 1637.857142857143,156 1745.0,156" stroke="#546477" stroke-width="2.2" fill="none"/>
+<text x="20" y="226" class="label">rst_n</text>
+<polyline points="245.0,236 373.57142857142856,236 373.57142857142856,209 1745.0,209" stroke="#546477" stroke-width="2.2" fill="none"/>
+<rect x="12" y="252" width="1760" height="53" fill="#f3f6fa" fill-opacity="0.6"/>
+<text x="20" y="279" class="label">in_valid</text>
+<polyline points="245.0,289 459.2857142857143,289 459.2857142857143,262 1530.7142857142856,262 1530.7142857142856,289 1745.0,289" stroke="#158052" stroke-width="2.2" fill="none"/>
+<text x="20" y="332" class="label">in_data (decimal)</text>
+<polygon points="245.0,329 249.0,314 455.2857142857143,314 459.2857142857143,329 455.2857142857143,344 249.0,344" fill="white" stroke="#158052" stroke-width="1.7"><title>in_data: 0, 10 to 20 ns</title></polygon>
+<text x="352.1428571428571" y="334" text-anchor="middle" font-size="16">0</text>
+<polygon points="459.2857142857143,329 463.2857142857143,314 669.5714285714286,314 673.5714285714286,329 669.5714285714286,344 463.2857142857143,344" fill="white" stroke="#158052" stroke-width="1.7"><title>in_data: 10, 20 to 30 ns</title></polygon>
+<text x="566.4285714285714" y="334" text-anchor="middle" font-size="16">10</text>
+<polygon points="673.5714285714286,329 677.5714285714286,314 883.8571428571428,314 887.8571428571428,329 883.8571428571428,344 677.5714285714286,344" fill="white" stroke="#158052" stroke-width="1.7"><title>in_data: 20, 30 to 40 ns</title></polygon>
+<text x="780.7142857142857" y="334" text-anchor="middle" font-size="16">20</text>
+<polygon points="887.8571428571428,329 891.8571428571428,314 1098.142857142857,314 1102.142857142857,329 1098.142857142857,344 891.8571428571428,344" fill="white" stroke="#158052" stroke-width="1.7"><title>in_data: 30, 40 to 50 ns</title></polygon>
+<text x="995.0" y="334" text-anchor="middle" font-size="16">30</text>
+<polygon points="1102.142857142857,329 1106.142857142857,314 1312.4285714285716,314 1316.4285714285716,329 1312.4285714285716,344 1106.142857142857,344" fill="white" stroke="#158052" stroke-width="1.7"><title>in_data: 40, 50 to 60 ns</title></polygon>
+<text x="1209.2857142857142" y="334" text-anchor="middle" font-size="16">40</text>
+<polygon points="1316.4285714285716,329 1320.4285714285716,314 1741.0,314 1745.0,329 1741.0,344 1320.4285714285716,344" fill="white" stroke="#158052" stroke-width="1.7"><title>in_data: 50, 60 to 80 ns</title></polygon>
+<text x="1530.7142857142858" y="334" text-anchor="middle" font-size="16">50</text>
+<rect x="12" y="358" width="1760" height="53" fill="#f3f6fa" fill-opacity="0.6"/>
+<text x="20" y="385" class="label">buff[0] (newest)</text>
+<polygon points="245.0,382 249.0,367 562.4285714285713,367 566.4285714285713,382 562.4285714285713,397 249.0,397" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff0: 0, 10 to 25 ns</title></polygon>
+<text x="405.71428571428567" y="387" text-anchor="middle" font-size="16">0</text>
+<polygon points="566.4285714285713,382 570.4285714285713,367 776.7142857142858,367 780.7142857142858,382 776.7142857142858,397 570.4285714285713,397" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff0: 10, 25 to 35 ns</title></polygon>
+<text x="673.5714285714286" y="387" text-anchor="middle" font-size="16">10</text>
+<polygon points="780.7142857142858,382 784.7142857142858,367 991.0,367 995.0,382 991.0,397 784.7142857142858,397" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff0: 20, 35 to 45 ns</title></polygon>
+<text x="887.8571428571429" y="387" text-anchor="middle" font-size="16">20</text>
+<polygon points="995.0,382 999.0,367 1205.2857142857142,367 1209.2857142857142,382 1205.2857142857142,397 999.0,397" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff0: 30, 45 to 55 ns</title></polygon>
+<text x="1102.142857142857" y="387" text-anchor="middle" font-size="16">30</text>
+<polygon points="1209.2857142857142,382 1213.2857142857142,367 1419.5714285714284,367 1423.5714285714284,382 1419.5714285714284,397 1213.2857142857142,397" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff0: 40, 55 to 65 ns</title></polygon>
+<text x="1316.4285714285713" y="387" text-anchor="middle" font-size="16">40</text>
+<polygon points="1423.5714285714284,382 1427.5714285714284,367 1741.0,367 1745.0,382 1741.0,397 1427.5714285714284,397" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff0: 50, 65 to 80 ns</title></polygon>
+<text x="1584.2857142857142" y="387" text-anchor="middle" font-size="16">50</text>
+<text x="20" y="438" class="label">buff[1]</text>
+<polygon points="245.0,435 249.0,420 776.7142857142858,420 780.7142857142858,435 776.7142857142858,450 249.0,450" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff1: 0, 10 to 35 ns</title></polygon>
+<text x="512.8571428571429" y="440" text-anchor="middle" font-size="16">0</text>
+<polygon points="780.7142857142858,435 784.7142857142858,420 991.0,420 995.0,435 991.0,450 784.7142857142858,450" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff1: 10, 35 to 45 ns</title></polygon>
+<text x="887.8571428571429" y="440" text-anchor="middle" font-size="16">10</text>
+<polygon points="995.0,435 999.0,420 1205.2857142857142,420 1209.2857142857142,435 1205.2857142857142,450 999.0,450" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff1: 20, 45 to 55 ns</title></polygon>
+<text x="1102.142857142857" y="440" text-anchor="middle" font-size="16">20</text>
+<polygon points="1209.2857142857142,435 1213.2857142857142,420 1419.5714285714284,420 1423.5714285714284,435 1419.5714285714284,450 1213.2857142857142,450" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff1: 30, 55 to 65 ns</title></polygon>
+<text x="1316.4285714285713" y="440" text-anchor="middle" font-size="16">30</text>
+<polygon points="1423.5714285714284,435 1427.5714285714284,420 1741.0,420 1745.0,435 1741.0,450 1427.5714285714284,450" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff1: 40, 65 to 80 ns</title></polygon>
+<text x="1584.2857142857142" y="440" text-anchor="middle" font-size="16">40</text>
+<rect x="12" y="464" width="1760" height="53" fill="#f3f6fa" fill-opacity="0.6"/>
+<text x="20" y="491" class="label">buff[2] (oldest)</text>
+<polygon points="245.0,488 249.0,473 991.0,473 995.0,488 991.0,503 249.0,503" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff2: 0, 10 to 45 ns</title></polygon>
+<text x="620.0" y="493" text-anchor="middle" font-size="16">0</text>
+<polygon points="995.0,488 999.0,473 1205.2857142857142,473 1209.2857142857142,488 1205.2857142857142,503 999.0,503" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff2: 10, 45 to 55 ns</title></polygon>
+<text x="1102.142857142857" y="493" text-anchor="middle" font-size="16">10</text>
+<polygon points="1209.2857142857142,488 1213.2857142857142,473 1419.5714285714284,473 1423.5714285714284,488 1419.5714285714284,503 1213.2857142857142,503" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff2: 20, 55 to 65 ns</title></polygon>
+<text x="1316.4285714285713" y="493" text-anchor="middle" font-size="16">20</text>
+<polygon points="1423.5714285714284,488 1427.5714285714284,473 1741.0,473 1745.0,488 1741.0,503 1427.5714285714284,503" fill="white" stroke="#2366b1" stroke-width="1.7"><title>buff2: 30, 65 to 80 ns</title></polygon>
+<text x="1584.2857142857142" y="493" text-anchor="middle" font-size="16">30</text>
+<text x="20" y="544" class="label">cnt</text>
+<polygon points="245.0,541 249.0,526 562.4285714285713,526 566.4285714285713,541 562.4285714285713,556 249.0,556" fill="white" stroke="#546477" stroke-width="1.7"><title>cnt: 0, 10 to 25 ns</title></polygon>
+<text x="405.71428571428567" y="546" text-anchor="middle" font-size="16">0</text>
+<polygon points="566.4285714285713,541 570.4285714285713,526 776.7142857142858,526 780.7142857142858,541 776.7142857142858,556 570.4285714285713,556" fill="white" stroke="#546477" stroke-width="1.7"><title>cnt: 1, 25 to 35 ns</title></polygon>
+<text x="673.5714285714286" y="546" text-anchor="middle" font-size="16">1</text>
+<polygon points="780.7142857142858,541 784.7142857142858,526 991.0,526 995.0,541 991.0,556 784.7142857142858,556" fill="white" stroke="#546477" stroke-width="1.7"><title>cnt: 2, 35 to 45 ns</title></polygon>
+<text x="887.8571428571429" y="546" text-anchor="middle" font-size="16">2</text>
+<polygon points="995.0,541 999.0,526 1741.0,526 1745.0,541 1741.0,556 999.0,556" fill="white" stroke="#546477" stroke-width="1.7"><title>cnt: 3, 45 to 80 ns</title></polygon>
+<text x="1370.0" y="546" text-anchor="middle" font-size="16">3</text>
+<rect x="12" y="570" width="1760" height="53" fill="#f3f6fa" fill-opacity="0.6"/>
+<text x="20" y="597" class="label">hold</text>
+<polygon points="245.0,594 249.0,579 1205.2857142857142,579 1209.2857142857142,594 1205.2857142857142,609 249.0,609" fill="white" stroke="#2366b1" stroke-width="1.7"><title>held_sum: 0, 10 to 55 ns</title></polygon>
+<text x="727.1428571428571" y="599" text-anchor="middle" font-size="16">0</text>
+<polygon points="1209.2857142857142,594 1213.2857142857142,579 1419.5714285714284,579 1423.5714285714284,594 1419.5714285714284,609 1213.2857142857142,609" fill="white" stroke="#2366b1" stroke-width="1.7"><title>held_sum: 100, 55 to 65 ns</title></polygon>
+<text x="1316.4285714285713" y="599" text-anchor="middle" font-size="16">100</text>
+<polygon points="1423.5714285714284,594 1427.5714285714284,579 1741.0,579 1745.0,594 1741.0,609 1427.5714285714284,609" fill="white" stroke="#2366b1" stroke-width="1.7"><title>held_sum: 140, 65 to 80 ns</title></polygon>
+<text x="1584.2857142857142" y="599" text-anchor="middle" font-size="16">140</text>
+<text x="20" y="650" class="label">out_sum: ACTUAL</text>
+<polygon points="245.0,647 249.0,632 991.0,632 995.0,647 991.0,662 249.0,662" fill="white" stroke="#c23936" stroke-width="1.7"><title>out_sum: 0, 10 to 45 ns</title></polygon>
+<text x="620.0" y="652" text-anchor="middle" font-size="16">0</text>
+<polygon points="995.0,647 999.0,632 1098.142857142857,632 1102.142857142857,647 1098.142857142857,662 999.0,662" fill="white" stroke="#c23936" stroke-width="1.7"><title>out_sum: 90, 45 to 50 ns</title></polygon>
+<text x="1048.5714285714284" y="652" text-anchor="middle" font-size="16">90</text>
+<polygon points="1102.142857142857,647 1106.142857142857,632 1205.2857142857142,632 1209.2857142857142,647 1205.2857142857142,662 1106.142857142857,662" fill="white" stroke="#c23936" stroke-width="1.7"><title>out_sum: 100, 50 to 55 ns</title></polygon>
+<text x="1155.7142857142858" y="652" text-anchor="middle" font-size="16">100</text>
+<polygon points="1209.2857142857142,647 1213.2857142857142,632 1312.4285714285716,632 1316.4285714285716,647 1312.4285714285716,662 1213.2857142857142,662" fill="white" stroke="#c23936" stroke-width="1.7"><title>out_sum: 130, 55 to 60 ns</title></polygon>
+<text x="1262.857142857143" y="652" text-anchor="middle" font-size="16">130</text>
+<polygon points="1316.4285714285716,647 1320.4285714285716,632 1419.5714285714284,632 1423.5714285714284,647 1419.5714285714284,662 1320.4285714285716,662" fill="white" stroke="#c23936" stroke-width="1.7"><title>out_sum: 140, 60 to 65 ns</title></polygon>
+<text x="1370.0" y="652" text-anchor="middle" font-size="16">140</text>
+<polygon points="1423.5714285714284,647 1427.5714285714284,632 1526.7142857142856,632 1530.7142857142856,647 1526.7142857142856,662 1427.5714285714284,662" fill="white" stroke="#c23936" stroke-width="1.7"><title>out_sum: 170, 65 to 70 ns</title></polygon>
+<text x="1477.1428571428569" y="652" text-anchor="middle" font-size="16">170</text>
+<polygon points="1530.7142857142856,647 1534.7142857142856,632 1741.0,632 1745.0,647 1741.0,662 1534.7142857142856,662" fill="white" stroke="#c23936" stroke-width="1.7"><title>out_sum: 140, 70 to 80 ns</title></polygon>
+<text x="1637.8571428571427" y="652" text-anchor="middle" font-size="16">140</text>
+<rect x="12" y="676" width="1760" height="53" fill="#f3f6fa" fill-opacity="0.6"/>
+<text x="20" y="703" class="label">out_sum: EXPECTED</text>
+<polygon points="245.0,700 249.0,685 1205.307142857143,685 1209.307142857143,700 1205.307142857143,715 249.0,715" fill="white" stroke="#a66b00" stroke-width="1.7"><title>expected_sum: 0, 10 to 55.001 ns</title></polygon>
+<text x="727.1535714285715" y="705" text-anchor="middle" font-size="16">0</text>
+<polygon points="1209.307142857143,700 1213.307142857143,685 1419.5928571428572,685 1423.5928571428572,700 1419.5928571428572,715 1213.307142857143,715" fill="white" stroke="#a66b00" stroke-width="1.7"><title>expected_sum: 100, 55.001 to 65.001 ns</title></polygon>
+<text x="1316.45" y="705" text-anchor="middle" font-size="16">100</text>
+<polygon points="1423.5928571428572,700 1427.5928571428572,685 1741.0,685 1745.0,700 1741.0,715 1427.5928571428572,715" fill="white" stroke="#a66b00" stroke-width="1.7"><title>expected_sum: 140, 65.001 to 80 ns</title></polygon>
+<text x="1584.2964285714286" y="705" text-anchor="middle" font-size="16">140</text>
+<text x="20" y="756" class="label">out_valid: ACTUAL</text>
+<polyline points="245.0,766 995.0,766 995.0,739 1530.7142857142856,739 1530.7142857142856,766 1745.0,766" stroke="#c23936" stroke-width="2.2" fill="none"/>
+<rect x="12" y="782" width="1760" height="53" fill="#f3f6fa" fill-opacity="0.6"/>
+<text x="20" y="809" class="label">out_valid: EXPECTED</text>
+<polyline points="245.0,819 1209.307142857143,819 1209.307142857143,792 1637.8785714285716,792 1637.8785714285716,819 1745.0,819" stroke="#a66b00" stroke-width="2.2" fill="none"/>
+<rect x="25" y="852" width="1740" height="112" rx="8" fill="#fff6e5" stroke="#e5c28b"/>
+<text x="42" y="877" font-size="18" font-weight="bold">At 55.001 ns, after accepting sample 4 (40):</text>
+<text x="42" y="905" font-size="17">in_valid=1, in_data=40, buff[0]=40, buff[1]=30, buff[2]=20, hold=100</text>
+<text x="42" y="933" font-size="17">Actual out_sum=130 (20+30+40+40); required out_sum=100. Inputs stay unchanged until 60 ns.</text>
+</svg>
