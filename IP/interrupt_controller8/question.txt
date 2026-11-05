@@ -1,0 +1,55 @@
+# Verilog Interview Problem: 8-Source Interrupt Controller
+
+Design a synthesizable interrupt controller that records events from eight sources, supports masking and clearing, and reports the highest-priority pending interrupt.
+
+## Interface
+
+```systemverilog
+module interrupt_controller8 (
+    input  logic       clk,
+    input  logic       rst_n,
+    input  logic [7:0] events,
+    input  logic [7:0] clear,
+    input  logic [7:0] mask,
+
+    output logic [7:0] pending,
+    output logic       irq,
+    output logic [2:0] irq_id
+);
+```
+
+All inputs are synchronous to `clk`; no clock-domain crossing logic is required.
+
+## Requirements
+
+- Use an **active-low synchronous reset**. At a rising edge with `rst_n=0`, clear all pending bits. Reset takes priority over events and clearing.
+- At each non-reset rising edge, `events[i]=1` sets `pending[i]`.
+- A pending bit stays set until cleared. It must not disappear just because its event input returns to zero.
+- At each non-reset rising edge, `clear[i]=1` clears `pending[i]`, unless a new event for the same source is sampled on that edge.
+- If `events[i]` and `clear[i]` are both 1, the **event wins**: `pending[i]` must be 1 after that edge.
+- `mask[i]=1` prevents source `i` from being reported. Masking must not prevent event capture or clear its pending bit.
+- Drive `irq` and `irq_id` **combinationally from the registered pending bits and the current mask**. Raw event inputs must not directly assert `irq` before being sampled.
+- Assert `irq` whenever at least one pending source is unmasked.
+- Use fixed priority: **source 0 has the highest priority, followed by 1 through 7**. When `irq=1`, `irq_id` identifies the lowest-numbered unmasked pending source.
+- When `irq=0`, drive `irq_id=0`.
+- Reporting an interrupt does not acknowledge or clear it. Only `clear`, subject to event priority, or reset can clear a pending bit.
+- Changing `mask` may immediately change `irq` and `irq_id` without a clock edge. Unmasking a source whose pending bit is already set must make it eligible immediately.
+
+## Example
+
+Assume reset has completed and `pending=0`. The input values in each row are present **before that rising edge**. The listed outputs are observed **after register updates and combinational settling**, with the mask held at the listed value. Eight-bit values are hexadecimal; `irq_id` is decimal.
+
+| Edge | `events` | `clear` | `mask` | `pending` after edge | `irq` | `irq_id` |
+|---|---|---|---|---|---|---|
+| 1 | 08 | 08 | 08 | 08 | 0 | 0 |
+| 2 | 02 | 00 | 08 | 0A | 1 | 1 |
+| 3 | 00 | 02 | 08 | 08 | 0 | 0 |
+| 4 | 00 | 00 | 00 | 08 | 1 | 3 |
+| 5 | 01 | 08 | 00 | 01 | 1 | 0 |
+| 6 | 00 | 01 | 00 | 00 | 0 | 0 |
+
+At edge 1, source 3 becomes pending even though it is masked and a clear is requested simultaneously. At edge 4, unmasking source 3 reveals the event that was already recorded; the mask change itself does not need a clock edge to affect `irq`.
+
+## Task
+
+Implement the module. Be prepared to explain event-versus-clear priority, the difference between masking and clearing, and how to ensure that the priority encoder always produces a fully assigned combinational output.
