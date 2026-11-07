@@ -1,0 +1,50 @@
+# Verilog Interview Problem: Reliable Pulse Transfer Between Clock Domains
+
+Design a synthesizable module that transfers an event from a source clock domain to a destination clock domain. Each accepted source request must produce exactly one destination-clock pulse.
+
+## Interface
+
+```systemverilog
+module pulse_cdc_handshake (
+    input  logic src_clk,
+    input  logic dst_clk,
+    input  logic rst_n,
+
+    input  logic src_pulse,
+    output logic src_busy,
+    output logic dst_pulse
+);
+```
+
+## Assumptions
+
+- `src_clk` and `dst_clk` run continuously and have unrelated frequencies and phases. Either clock may be faster.
+- `src_pulse` is synchronous to `src_clk` and is a one-source-cycle request pulse.
+- Use a shared **active-low asynchronous reset**. Assume reset release is handled safely for both clock domains by the surrounding system; implementing reset-release synchronizers is outside this exercise.
+- Reset is asserted to both domains together. Reset during a transfer may discard that transfer.
+
+## Requirements
+
+- Reset must clear `src_busy` and `dst_pulse` and return the internal handshake to its idle state. Reset release must not create a destination pulse by itself.
+- Accept a source request on a rising edge of `src_clk` when `src_pulse=1` and `src_busy=0` immediately before that edge.
+- Assert `src_busy` after accepting a request. Keep it asserted until the destination has emitted the corresponding pulse and an acknowledgment has returned through the source-domain synchronizer.
+- Ignore source requests sampled while `src_busy=1`. Do not queue them or generate destination pulses for them.
+- If `src_busy` becomes low after a source edge, the earliest new acceptance is a subsequent source edge at which it is already low before sampling.
+- For every accepted request, eventually assert `dst_pulse` for **exactly one destination-clock cycle**. Never duplicate an accepted request.
+- During normal operation, `dst_pulse` may change only after rising edges of `dst_clk`; `src_busy` may change only after rising edges of `src_clk`. Asynchronous reset is the exception.
+- Use a closed-loop request/acknowledgment handshake so that a request remains represented until the destination has observed it.
+- Every single-bit control signal crossing between clock domains must pass through **at least two receiving-clock synchronizer registers** before being used by the receiving-domain control logic. Do not place combinational logic between those synchronizer stages.
+- Do not sample the raw `src_pulse` directly in the destination domain.
+- Once a request is delivered and acknowledged, `src_busy` must eventually deassert so another request can be accepted.
+- No fixed transfer latency is required. Latency depends on clock frequencies, relative phase, and the synchronizer/handshake implementation.
+
+## Example Scenario
+
+1. With `src_busy=0`, a source edge samples `src_pulse=1`. Request A is accepted and `src_busy` becomes 1.
+2. Another source pulse occurs while `src_busy=1`. This request is ignored.
+3. The destination eventually emits one pulse for request A. The acknowledgment returns to the source, and `src_busy` eventually becomes 0. The ignored request must not produce another pulse.
+4. A later source pulse sampled while `src_busy=0` is accepted as request B and eventually produces one additional destination pulse.
+
+## Task
+
+Implement the module. Be prepared to explain why directly passing a short pulse through two destination-clock registers can lose an event, how the acknowledgment prevents loss or duplication of accepted requests, and which signals belong to each clock domain.
