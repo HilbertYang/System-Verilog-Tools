@@ -1,0 +1,69 @@
+# Verilog Interview Problem: Synchronous RAM with Byte Write Enables
+
+Design a synthesizable 16-word, 32-bit memory with one synchronous read port and one write port. The ports have independent addresses and may operate on the same clock edge.
+
+## Interface
+
+```systemverilog
+module byte_write_ram (
+    input  logic        clk,
+    input  logic        rst_n,
+
+    input  logic        wr_en,
+    input  logic [3:0]  wr_addr,
+    input  logic [31:0] wr_data,
+    input  logic [3:0]  wr_strb,
+
+    input  logic        rd_en,
+    input  logic [3:0]  rd_addr,
+    output logic [31:0] rd_data,
+    output logic        rd_valid
+);
+```
+
+## Requirements
+
+- All request inputs are sampled at rising edges of `clk`. Inputs must be valid before the sampling edge; registered outputs update after that edge.
+- Use an **active-low synchronous reset**. Reset sets `rd_data=0` and `rd_valid=0` and ignores read and write requests on that edge.
+- Do not reset or initialize the memory array. Stored contents must survive reset. Reading a location before it has been written yields unspecified data.
+- On a non-reset edge with `wr_en=1`, update only the enabled bytes of the addressed word:
+  - `wr_strb[0]` controls bits `[7:0]`.
+  - `wr_strb[1]` controls bits `[15:8]`.
+  - `wr_strb[2]` controls bits `[23:16]`.
+  - `wr_strb[3]` controls bits `[31:24]`.
+- Bytes whose strobe bits are zero must retain their previous values. A write with `wr_strb=0` changes nothing.
+- On a non-reset edge with `rd_en=1`, load `rd_data` with the addressed word and set `rd_valid=1` immediately after that same edge. No additional response cycle is allowed.
+- On a non-reset edge with `rd_en=0`, clear `rd_valid` and hold `rd_data` unchanged.
+- Reads and writes to different addresses may happen simultaneously.
+- For a simultaneous read and write to the **same address**, the read must return the complete word as it existed **before that edge**, including the old values of any bytes being overwritten. Apply the byte writes to memory after sampling the old read value. This is read-before-write behavior.
+- Support a read and a byte-enabled write on every clock cycle, including consecutive cycles. No ready signals or output backpressure are required.
+
+## Example
+
+Assume address 3 has previously been fully written with `32'hAABBCCDD`.
+
+Before edge A, present these requests:
+
+```text
+wr_en   = 1
+wr_addr = 3
+wr_data = 32'h11223344
+wr_strb = 4'b0101
+rd_en   = 1
+rd_addr = 3
+```
+
+The table shows values **after each rising edge and register updates**:
+
+| Edge | Requests at this edge | `rd_valid` | `rd_data` | Memory word 3 after edge |
+|---|---|---|---|---|
+| A | Read and partial write described above | 1 | `AABBCCDD` | `AA22CC44` |
+| A+1 | Read address 3; no write | 1 | `AA22CC44` | `AA22CC44` |
+| A+2 | No read or write | 0 | `AA22CC44` | `AA22CC44` |
+| A+3 | Assert reset; requests are ignored | 0 | `00000000` | `AA22CC44` |
+
+All 32-bit values in the table are hexadecimal. Reset at A+3 clears the read output but preserves memory contents.
+
+## Task
+
+Implement the module. Be prepared to explain byte preservation, synchronous read timing, same-address read/write behavior, and why the memory array must not be cleared in the reset branch.
