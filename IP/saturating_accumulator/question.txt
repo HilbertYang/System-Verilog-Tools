@@ -1,0 +1,56 @@
+# Verilog Interview Problem: Signed Saturating Accumulator
+
+Design a synthesizable accumulator that adds signed 8-bit input values to a signed 8-bit running total. If an addition exceeds the representable range, clamp the result to the corresponding limit instead of allowing wraparound.
+
+## Interface
+
+```systemverilog
+module saturating_accumulator (
+    input  logic              clk,
+    input  logic              rst_n,
+    input  logic              clear,
+    input  logic              in_valid,
+    input  logic signed [7:0] in_data,
+
+    output logic signed [7:0] acc,
+    output logic              sat_pulse
+);
+```
+
+## Requirements
+
+- All inputs are sampled at rising edges of `clk`. They must be valid before the sampling edge; registered outputs update after that same edge.
+- Use an **active-low synchronous reset**. Reset sets `acc=0` and `sat_pulse=0`.
+- Apply this priority: **reset > clear > input accumulation**.
+- On an edge with `clear=1`, set both outputs to zero and ignore `in_valid` and `in_data`.
+- Otherwise, if `in_valid=1`, add `in_data` to the old value of `acc` using signed two's-complement arithmetic.
+- The output range is **-128 through +127**:
+  - If the mathematical sum is greater than +127, store +127 and set `sat_pulse=1`.
+  - If the mathematical sum is less than -128, store -128 and set `sat_pulse=1`.
+  - Otherwise, store the exact sum and set `sat_pulse=0`.
+- A sum exactly equal to +127 or -128 is in range and must not assert `sat_pulse`.
+- On an edge with `in_valid=0`, hold `acc` unchanged and clear `sat_pulse`.
+- Saturation is not a permanent lock. Later inputs must operate on the stored, clamped value and may move the accumulator back into the interior of the range.
+- `sat_pulse` indicates clipping for the input accepted at that edge; it is not sticky. Consecutive clipped additions may keep it high across consecutive cycles.
+- Support one input per clock cycle, including consecutive valid inputs.
+
+## Example
+
+Assume reset has completed and `acc=0`. Input values in each row are present **before that rising edge**. Output values are shown **after that edge and register updates**. All values are signed decimal.
+
+| Edge | `clear` | `in_valid` | `in_data` | `acc` after edge | `sat_pulse` |
+|---|---|---|---|---|---|
+| 1 | 0 | 1 | 100 | 100 | 0 |
+| 2 | 0 | 1 | 60 | 127 | 1 |
+| 3 | 0 | 1 | -128 | -1 | 0 |
+| 4 | 0 | 1 | -128 | -128 | 1 |
+| 5 | 0 | 1 | -1 | -128 | 1 |
+| 6 | 0 | 1 | 50 | -78 | 0 |
+| 7 | 0 | 0 | Don't care | -78 | 0 |
+| 8 | 1 | 1 | 80 | 0 | 0 |
+
+At edge 2, the mathematical sum is 160, so the stored value is clamped to 127. Edge 3 therefore computes `127 + (-128) = -1`, using the clamped result from the previous operation.
+
+## Task
+
+Implement the module. Be prepared to explain the arithmetic width needed before saturation, signed comparisons, exact-boundary cases, and why the saturation decision must be made before truncating the result to 8 bits.
