@@ -1,0 +1,57 @@
+# Verilog Interview Problem: One-to-Two Stream Broadcaster
+
+Design a synthesizable module that accepts an 8-bit input stream and delivers every accepted byte to two independent output streams. Each output must receive each byte exactly once and in order.
+
+## Interface
+
+```systemverilog
+module stream_broadcast2 (
+    input  logic            clk,
+    input  logic            rst_n,
+
+    input  logic [7:0]      in_data,
+    input  logic            in_valid,
+    output logic            in_ready,
+
+    output logic [1:0][7:0] out_data,
+    output logic [1:0]      out_valid,
+    input  logic [1:0]      out_ready
+);
+```
+
+`out_data[i]`, `out_valid[i]`, and `out_ready[i]` belong to output `i`. Vector values are written in `[1:0]` order; for example, `out_ready=2'b01` means only output 0 is ready.
+
+## Requirements
+
+- All handshakes are evaluated at rising edges using the signal values immediately **before** the edge. State and registered-data updates become visible **after** that edge.
+- Use an **active-low synchronous reset**. Reset discards buffered data, clears both output-valid bits, sets both output-data bytes to zero, and overrides all transfers on that edge.
+- Accept an input byte when `in_valid && in_ready`.
+- Output `i` accepts a byte when `out_valid[i] && out_ready[i]`. The outputs may accept the same byte on different edges.
+- Provide storage for **one byte total**, together with whatever control state is needed to track delivery to both outputs.
+- After accepting an input byte, present it as valid to both outputs. It cannot be transferred to an output on the input-acceptance edge itself.
+- Once an output accepts the buffered byte, deassert its valid bit until a new input byte is accepted. Do not send the old byte to that output again while waiting for the other output.
+- While `out_valid[i] && !out_ready[i]`, keep that output's valid bit and data stable.
+- Do not accept a new byte while either output still needs the old byte, unless every remaining delivery will complete on the same edge.
+- Generate `in_ready` combinationally and independently of `in_valid`. It must be high when the buffer is empty, or when every output still needing the old byte is ready to accept it.
+- Allow the final delivery of an old byte and acceptance of a new byte on the **same edge**. The output transfers on that edge use the old byte; after the edge, both outputs must be valid with the new byte.
+- An output that already accepted the old byte must not block replacement merely because its ready signal is low.
+- If no new byte replaces a fully delivered byte, clear both output-valid bits. Output data is unspecified when the corresponding valid bit is zero, except after reset.
+- With both outputs continuously ready, support one input byte per clock and one byte per output per clock after the initial buffering edge.
+
+## Example
+
+Assume reset has completed and the buffer is empty. Inputs and `in_ready` in the table are the values **before each edge**. Output transfers use pre-edge data; the final column shows `out_valid` **after each edge**. Byte values are hexadecimal.
+
+| Edge | `in_valid` | `in_data` | `out_ready` | `in_ready` | Output transfers at edge | Input accepted? | `out_valid` after edge |
+|---|---|---|---|---|---|---|---|
+| A | 1 | 11 | 00 | 1 | None | Yes | 11 |
+| A+1 | 1 | 22 | 01 | 0 | Output 0 accepts 11 | No | 10 |
+| A+2 | 1 | 22 | 01 | 0 | None | No | 10 |
+| A+3 | 1 | 22 | 10 | 1 | Output 1 accepts 11 | Yes | 11 |
+| A+4 | 0 | Don't care | 11 | 1 | Both outputs accept 22 | No | 00 |
+
+At A+2, output 0 must not receive 11 a second time. At A+3, output 0's low ready bit must not prevent accepting 22 because it already received 11. Immediately after A+3, both output-data bytes are 22.
+
+## Task
+
+Implement the module. Be prepared to explain per-output completion tracking, stalled-output stability, and simultaneous final delivery and buffer replacement.
