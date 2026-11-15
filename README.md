@@ -43,6 +43,7 @@ verified.
 | [divider_sum](IP/divider_sum/) | Computing `a/b + c/d + e/f` with resource-sharing and parallel pipeline architectures. | [Question](IP/divider_sum/question.txt) |
 | [saturating_accumulator](IP/saturating_accumulator/) | Signed accumulation with saturation and clipping indication. | [Question](IP/saturating_accumulator/question.txt) |
 | [moving_sum4](IP/moving_sum4/) | Running sum of the four most recently accepted samples. | [Question](IP/moving_sum4/question.txt) |
+| [signed_sort4](IP/signed_sort4/) | Sorting four signed values with stable tie ordering, original lane indices, and registered results. | [Question](IP/signed_sort4/question.md) |
 
 The unsigned divider also has a [datapath explanation and simulation instructions](IP/unsigned_divider/README.md).
 
