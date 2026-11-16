@@ -53,6 +53,7 @@ The unsigned divider also has a [datapath explanation and simulation instruction
 | --- | --- | --- |
 | [one_stage_buffer](IP/one_stage_buffer/) | Single-entry valid/ready buffering with simultaneous consumption and replacement. | [Question](IP/one_stage_buffer/question.txt) |
 | [stream_packer](IP/stream_packer/) | Packing four input bytes into one 32-bit output word under backpressure. | [Question](IP/stream_packer/question.txt) |
+| [stream_rle](IP/stream_rle/) | Run-length encoding with 255-byte run splitting, explicit flush requests, and output backpressure. | [Question](IP/stream_rle/question.md) |
 | [stream_broadcast2](IP/stream_broadcast2/) | Delivering each input byte once to two independently stalled outputs. | [Question](IP/stream_broadcast2/question.txt) |
 | [packet_arbiter](IP/packet_arbiter/) | Merging two streams while retaining ownership through each packet. | [Question](IP/packet_arbiter/question.txt) |
 | [packet_crc8](IP/packet_crc8/) | Byte-per-clock packet CRC-8 calculation with a buffered result and output backpressure. | [Question](IP/packet_crc8/question.md) |
