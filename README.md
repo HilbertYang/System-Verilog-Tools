@@ -4,6 +4,25 @@ This repository collects SystemVerilog learning exercises, interview-style RTL
 problems, and small reusable modules. Exercises cover arithmetic, streaming
 interfaces, storage, control logic, clock-domain crossing, and state machines.
 
+## SV Practice Statistics
+
+<!-- SV-STATS:START -->
+| RTL implementation files | Current code lines | All-time added / deleted | Last 30 days added / deleted |
+| ---: | ---: | ---: | ---: |
+| 37 | 1,866 | +2,226 / −41 | +1,526 / −41 |
+
+![Daily RTL practice](docs/stats/sv-activity.svg)
+
+As of **2026-11-16** (America/Los_Angeles). Counts use committed `HEAD`,
+with implementation `.sv` / `.v` files under `IP/`; testbenches, golden files,
+and reference files are excluded by filename. Current code lines exclude blank
+and comment-only lines. Historical changes include all physical lines and use
+first-parent commit dates. These measure repository activity, not literal
+keystrokes or verified human-only authorship.
+
+[Counting rules and local refresh](docs/sv-stats.md) · [Detailed data](docs/stats/sv-stats.json)
+<!-- SV-STATS:END -->
+
 ## What This Repo Is For
 
 - Learning and reviewing SystemVerilog RTL design.

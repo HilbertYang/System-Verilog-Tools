@@ -1,0 +1,522 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-11-16",
+  "timezone": "America/Los_Angeles",
+  "last_rtl_commit": "04b43e3f8067f95a2aa83b1f747c76a3d6554570",
+  "scope": {
+    "roots": [
+      "IP"
+    ],
+    "extensions": [
+      ".sv",
+      ".v"
+    ],
+    "exclude": [
+      "**/tb_*",
+      "**/*_tb.sv",
+      "**/*_tb.v",
+      "**/*golden*",
+      "**/*reference*",
+      "**/testbench/**",
+      "**/tests/**",
+      "**/.svlangserver/**"
+    ],
+    "timezone": "America/Los_Angeles",
+    "chart_days": 30
+  },
+  "current": {
+    "files": 37,
+    "code_lines": 1866,
+    "physical_lines": 2185
+  },
+  "history": {
+    "added": 2226,
+    "deleted": 41,
+    "commits": 20,
+    "daily": [
+      {
+        "date": "2026-04-30",
+        "added": 700,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-10-27",
+        "added": 403,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-10-28",
+        "added": 94,
+        "deleted": 41,
+        "commits": 2
+      },
+      {
+        "date": "2026-10-29",
+        "added": 42,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-01",
+        "added": 174,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-02",
+        "added": 53,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-03",
+        "added": 53,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-04",
+        "added": 39,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-05",
+        "added": 42,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-06",
+        "added": 64,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-07",
+        "added": 39,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-08",
+        "added": 45,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-09",
+        "added": 41,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-10",
+        "added": 52,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-11",
+        "added": 119,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-12",
+        "added": 44,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-14",
+        "added": 49,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-15",
+        "added": 83,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-16",
+        "added": 90,
+        "deleted": 0,
+        "commits": 1
+      }
+    ]
+  },
+  "recent": [
+    {
+      "date": "2026-10-18",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-19",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-20",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-21",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-22",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-23",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-24",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-25",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-26",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-27",
+      "added": 403,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-10-28",
+      "added": 94,
+      "deleted": 41,
+      "commits": 2
+    },
+    {
+      "date": "2026-10-29",
+      "added": 42,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-10-30",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-10-31",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-11-01",
+      "added": 174,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-02",
+      "added": 53,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-03",
+      "added": 53,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-04",
+      "added": 39,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-05",
+      "added": 42,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-06",
+      "added": 64,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-07",
+      "added": 39,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-08",
+      "added": 45,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-09",
+      "added": 41,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-10",
+      "added": 52,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-11",
+      "added": 119,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-12",
+      "added": 44,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-13",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
+    },
+    {
+      "date": "2026-11-14",
+      "added": 49,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-15",
+      "added": 83,
+      "deleted": 0,
+      "commits": 1
+    },
+    {
+      "date": "2026-11-16",
+      "added": 90,
+      "deleted": 0,
+      "commits": 1
+    }
+  ],
+  "files": [
+    {
+      "path": "IP/FSM/seqDetection/seq_detection.sv",
+      "physical_lines": 38,
+      "code_lines": 29
+    },
+    {
+      "path": "IP/FSM/seqDetection_1001/seq_detection_1001.sv",
+      "physical_lines": 34,
+      "code_lines": 28
+    },
+    {
+      "path": "IP/FSM/traffic_light/traffic_light.sv",
+      "physical_lines": 66,
+      "code_lines": 63
+    },
+    {
+      "path": "IP/FSM/vending_machine/vending_machine.sv",
+      "physical_lines": 61,
+      "code_lines": 55
+    },
+    {
+      "path": "IP/assoc_table4/assoc_table4.sv",
+      "physical_lines": 119,
+      "code_lines": 99
+    },
+    {
+      "path": "IP/asynSynreset/async_rst_sync_release.sv",
+      "physical_lines": 18,
+      "code_lines": 16
+    },
+    {
+      "path": "IP/byte_stream_parser/byte_stream_parser.sv",
+      "physical_lines": 57,
+      "code_lines": 51
+    },
+    {
+      "path": "IP/byte_write_ram/byte_write_ram.sv",
+      "physical_lines": 39,
+      "code_lines": 33
+    },
+    {
+      "path": "IP/clk_divider/clk_div2.sv",
+      "physical_lines": 14,
+      "code_lines": 12
+    },
+    {
+      "path": "IP/clk_divider/clk_div3.sv",
+      "physical_lines": 47,
+      "code_lines": 38
+    },
+    {
+      "path": "IP/divider_sum/div_sum_area_min.sv",
+      "physical_lines": 165,
+      "code_lines": 141
+    },
+    {
+      "path": "IP/divider_sum/div_sum_speed_max.sv",
+      "physical_lines": 88,
+      "code_lines": 73
+    },
+    {
+      "path": "IP/fifo/asy_fifo/async_fifo.sv",
+      "physical_lines": 117,
+      "code_lines": 95
+    },
+    {
+      "path": "IP/fifo/asy_fifo/async_fifo.v",
+      "physical_lines": 113,
+      "code_lines": 70
+    },
+    {
+      "path": "IP/fifo/syn_fifo/syn_fifo.sv",
+      "physical_lines": 42,
+      "code_lines": 35
+    },
+    {
+      "path": "IP/interrupt_controller8/interrupt_controller8.sv",
+      "physical_lines": 42,
+      "code_lines": 37
+    },
+    {
+      "path": "IP/iterative_multiplier/iterative_multiplier.sv",
+      "physical_lines": 53,
+      "code_lines": 50
+    },
+    {
+      "path": "IP/moving_sum4/moving_sum4.sv",
+      "physical_lines": 39,
+      "code_lines": 34
+    },
+    {
+      "path": "IP/one_stage_buffer/one_stage_buffer.sv",
+      "physical_lines": 35,
+      "code_lines": 28
+    },
+    {
+      "path": "IP/packet_arbiter/packet_arbiter.sv",
+      "physical_lines": 76,
+      "code_lines": 64
+    },
+    {
+      "path": "IP/packet_arbiter/packet_arbiter_buffer.sv",
+      "physical_lines": 98,
+      "code_lines": 90
+    },
+    {
+      "path": "IP/packet_crc8/packet_crc8.sv",
+      "physical_lines": 52,
+      "code_lines": 48
+    },
+    {
+      "path": "IP/pulse_cdc_handshake/pulse_cdc_handshake.sv",
+      "physical_lines": 64,
+      "code_lines": 54
+    },
+    {
+      "path": "IP/pwm_generator/pwm_generator.sv",
+      "physical_lines": 44,
+      "code_lines": 39
+    },
+    {
+      "path": "IP/resource_allocator8/resource_allocator8.sv",
+      "physical_lines": 90,
+      "code_lines": 83
+    },
+    {
+      "path": "IP/rr_arbiter/rr_arbiter.sv",
+      "physical_lines": 55,
+      "code_lines": 50
+    },
+    {
+      "path": "IP/saturating_accumulator/saturating_accumulator.sv",
+      "physical_lines": 45,
+      "code_lines": 41
+    },
+    {
+      "path": "IP/signed_sort4/signed_sort4.sv",
+      "physical_lines": 49,
+      "code_lines": 45
+    },
+    {
+      "path": "IP/sixLaneSum_handshake/sixLaneSum_handshake.sv",
+      "physical_lines": 35,
+      "code_lines": 28
+    },
+    {
+      "path": "IP/sixLaneSum_handshake/sixLaneSum_pipe2.sv",
+      "physical_lines": 44,
+      "code_lines": 39
+    },
+    {
+      "path": "IP/stream_broadcast2/stream_broadcast2.sv",
+      "physical_lines": 41,
+      "code_lines": 35
+    },
+    {
+      "path": "IP/stream_packer/stream_packer.sv",
+      "physical_lines": 42,
+      "code_lines": 34
+    },
+    {
+      "path": "IP/stream_rle/stream_rle.sv",
+      "physical_lines": 83,
+      "code_lines": 74
+    },
+    {
+      "path": "IP/two_bit_full_adder/full_adder.sv",
+      "physical_lines": 9,
+      "code_lines": 7
+    },
+    {
+      "path": "IP/two_bit_full_adder/two_bit_full_adder.sv",
+      "physical_lines": 25,
+      "code_lines": 22
+    },
+    {
+      "path": "IP/unsigned_divider/unsigned_restoring_divider.sv",
+      "physical_lines": 93,
+      "code_lines": 76
+    },
+    {
+      "path": "IP/watchdog_timer/watchdog_timer.sv",
+      "physical_lines": 53,
+      "code_lines": 50
+    }
+  ]
+}

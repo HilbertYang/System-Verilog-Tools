@@ -19,3 +19,6 @@ vsim_stacktrace.vstf
 *.swp
 *.un~
 *~
+
+# Python statistics tooling
+__pycache__/

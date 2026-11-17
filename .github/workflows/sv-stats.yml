@@ -1,0 +1,49 @@
+name: Update SV practice statistics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'IP/**'
+      - 'scripts/sv_stats*'
+      - '.github/workflows/sv-stats.yml'
+      - 'README.md'
+  schedule:
+    - cron: '23 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sv-stats-main
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify and generate statistics
+        run: |
+          python3 -m unittest discover -s scripts/tests -v
+          python3 scripts/sv_stats.py
+          git diff --check
+
+      - name: Commit generated files if changed
+        run: |
+          git add -- README.md docs/stats/sv-stats.json docs/stats/sv-activity.svg
+          if git diff --cached --quiet; then
+            echo "Statistics are already current."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: update SV practice statistics'
+          git push origin HEAD:main

@@ -1,0 +1,16 @@
+{
+  "roots": ["IP"],
+  "extensions": [".sv", ".v"],
+  "exclude": [
+    "**/tb_*",
+    "**/*_tb.sv",
+    "**/*_tb.v",
+    "**/*golden*",
+    "**/*reference*",
+    "**/testbench/**",
+    "**/tests/**",
+    "**/.svlangserver/**"
+  ],
+  "timezone": "America/Los_Angeles",
+  "chart_days": 30
+}
