@@ -75,6 +75,7 @@ identifies assumptions used to complete its specification.
 | Exercise | Focus | Problem statement |
 | --- | --- | --- |
 | [rr_arbiter](IP/rr_arbiter/) | Four-request round-robin arbitration with priority advancement on accepted transfers. | [Question](IP/rr_arbiter/question.txt) |
+| [resource_allocator8](IP/resource_allocator8/) | Dual-port allocation of eight resource IDs with fixed priority, release masks, and same-edge reuse. | [Question](IP/resource_allocator8/question.md) |
 | [interrupt_controller8](IP/interrupt_controller8/) | Pending interrupts, masking, event/clear priority, and fixed-priority encoding. | [Question](IP/interrupt_controller8/question.txt) |
 | [watchdog_timer](IP/watchdog_timer/) | Programmable timeout intervals, kicks, and expiration reporting. | [Question](IP/watchdog_timer/question.txt) |
 | [pwm_generator](IP/pwm_generator/) | Programmable PWM period and duty with configuration updates applied at frame boundaries and latest-request priority. | [Question](IP/pwm_generator/question.md) |
