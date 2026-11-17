@@ -36,7 +36,6 @@ keystrokes or verified human-only authorship.
 | --- | --- |
 | [IP/](IP/) | RTL exercises and small IP modules; see the exercise index below. |
 | [UVM/uart_uvm_tb/](UVM/uart_uvm_tb/README.md) | UART RTL, plain SystemVerilog testbenches, UVM components, and QuestaSim scripts. |
-| [AGENTS.md](AGENTS.md) | Repository collaboration, problem-writing, and review conventions. |
 
 An exercise directory may contain:
 
