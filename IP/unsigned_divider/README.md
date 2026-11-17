@@ -1,66 +1,66 @@
 # Unsigned Restoring Divider
 
-这个目录包含一个用于学习除法器数据通路的无符号逐位恢复除法器。
+This directory contains an unsigned bit-serial restoring divider for learning about divider datapaths.
 
-## 硬件结构
+## Hardware Structure
 
-除法器主要由以下部分组成：
+The divider consists mainly of the following components:
 
-- `quotient_work`：开始时保存被除数，迭代结束后变成商
-- `remainder_work`：保存每轮计算产生的部分余数
-- `divisor_reg`：在运算期间保存除数
-- 比较/减法器：判断部分余数是否足够减去除数
-- `iteration`：记录已经处理了多少位
+- `quotient_work`: initially holds the dividend and becomes the quotient after the iterations.
+- `remainder_work`: holds the partial remainder produced by each iteration.
+- `divisor_reg`: holds the divisor throughout the operation.
+- Comparator/subtractor: determines whether the divisor can be subtracted from the partial remainder.
+- `iteration`: tracks how many bits have been processed.
 
-数据每个周期大致按照下面的路径移动：
-
-```text
- quotient_work 的最高位
-           |
-           v
- remainder_work 左移并拼入该位
-           |
-           v
- 与 divisor_reg 比较，需要时执行减法
-           |
-           v
- 比较结果写入 quotient_work 的最低位
-```
-
-一个 `DATA_WIDTH` 位除法需要处理 `DATA_WIDTH` 个商位，因此非零除法需要
-`DATA_WIDTH` 个迭代周期。
-
-## 例子：13 / 3
-
-使用 4 位寄存器：
+Each cycle, data follows approximately this path:
 
 ```text
-初始      remainder=0000  quotient=1101
-第1轮     remainder=0001  quotient=1010
-第2轮     remainder=0000  quotient=0101
-第3轮     remainder=0000  quotient=1010
-第4轮     remainder=0001  quotient=0100
+ Most significant bit of quotient_work
+                 |
+                 v
+ Shift remainder_work left and append that bit
+                 |
+                 v
+ Compare with divisor_reg and subtract if needed
+                 |
+                 v
+ Write the comparison result to the least significant bit of quotient_work
 ```
 
-最终结果：
+A `DATA_WIDTH`-bit division processes `DATA_WIDTH` quotient bits, so division by a
+nonzero divisor takes `DATA_WIDTH` iteration cycles.
+
+## Example: 13 / 3
+
+Using 4-bit registers:
+
+```text
+Initial      remainder=0000  quotient=1101
+Iteration 1  remainder=0001  quotient=1010
+Iteration 2  remainder=0000  quotient=0101
+Iteration 3  remainder=0000  quotient=1010
+Iteration 4  remainder=0001  quotient=0100
+```
+
+Final result:
 
 ```text
 quotient  = 0100 = 4
 remainder = 0001 = 1
 ```
 
-即 `13 = 4 * 3 + 1`。
+That is, `13 = 4 * 3 + 1`.
 
-## 接口时序
+## Interface Timing
 
 ```text
-start && ready  接受 dividend 和 divisor
-busy            非零除法迭代期间保持为 1
-done            结果完成时拉高一个时钟周期
-ready           busy=0 时为 1
+start && ready  Accept dividend and divisor
+busy            Remains 1 during iterations for division by a nonzero divisor
+done            Asserts for one clock cycle when the result is complete
+ready           Is 1 when busy=0
 ```
 
-当 `divisor=0` 时不会进入迭代状态，模块直接返回：
+When `divisor=0`, the module skips the iteration state and directly returns:
 
 ```text
 quotient    = 0
@@ -68,9 +68,9 @@ remainder   = dividend
 div_by_zero = 1
 ```
 
-## 仿真
+## Simulation
 
-在仓库根目录执行：
+Run from the repository root:
 
 ```bash
 iverilog -g2012 -o /tmp/tb_unsigned_divider.vvp \
@@ -78,4 +78,3 @@ iverilog -g2012 -o /tmp/tb_unsigned_divider.vvp \
   IP/unsigned_divider/tb_unsigned_restoring_divider.sv
 vvp /tmp/tb_unsigned_divider.vvp
 ```
-

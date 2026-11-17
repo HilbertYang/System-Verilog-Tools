@@ -1,90 +1,90 @@
-# 字节流帧解析器：题目还原与复盘
+# Byte-Stream Frame Parser: Problem Reconstruction and Review
 
-> 根据本次对话中保留的文字和截图还原，不是原题逐字转录。下文区分最终澄清的要求与为形成完整题面而补充的假设。本文以还原题目为主，不附完整参考答案。
+> Reconstructed from text and screenshots retained in this conversation, rather than transcribed verbatim from the original problem. The following distinguishes the requirements clarified later from assumptions added to form a complete exercise. This document focuses on reconstructing the problem and does not include a complete reference solution.
 
-## 1. 这道题究竟在考什么
+## 1. What the Problem Tests
 
-设计一个可综合的 Verilog/SystemVerilog 字节流接收模块：从连续的 8-bit 输入中识别三个相邻的 SOP 字节，接收固定长度的 payload，再读取尾部校验字节，判断 payload 是否有效，并输出数据及完成/有效指示。
+Design a synthesizable Verilog/SystemVerilog byte-stream receiver: identify three adjacent SOP bytes in a continuous 8-bit input stream, receive a fixed-length payload, read a trailing check byte, determine whether the payload is valid, and output the data with a completion/valid indication.
 
-最关键的澄清是：**三个 SOP 是同一帧开头的三个连续字节，不是连续三帧各出现一个 SOP。**
+The key clarification is: **the three SOPs are three consecutive bytes at the beginning of one frame, not one SOP in each of three consecutive frames.**
 
-最初回答把它理解成在第 0、16、32 字节位置寻找三个帧头，这是当时的解释，并非最终题意。最终题意不需要用 32-bit 匹配历史来确认三个相隔 16 字节的帧头。
+The initial answer interpreted the problem as looking for three frame headers at byte positions 0, 16, and 32. That was the interpretation at the time, not the final intended requirement. The final requirement does not need a 32-bit match history to confirm three headers spaced 16 bytes apart.
 
-## 2. 最终格式与证据边界
+## 2. Final Format and Limits of the Evidence
 
-对话中先出现：
+The conversation initially showed:
 
 ```text
 SOP | SOP | SOP | PAYLOAD | CRC (8 bits)
 ```
 
-后续截图中的注释改成：
+A comment in a later screenshot changed this to:
 
 ```text
 SOP | SOP | SOP | PAYLOAD | parity (16 bits -> 1 parity) (8 bits)
 ```
 
-因此，最终复盘应优先按 **parity 校验版**整理，同时保留“最初称为 CRC”这一差异。CRC-8 和 8-bit parity 字段不是同一种算法。
+The final review should therefore prioritize the **parity-check version**, while retaining the distinction that the field was initially called CRC. CRC-8 and an 8-bit parity field are different algorithms.
 
-| 要求 | 还原结果 | 确定程度 |
+| Requirement | Reconstructed interpretation | Certainty |
 | --- | --- | --- |
-| 输入宽度 | 8 bit，按字节接收 | 已明确 |
-| SOP 值 | 示例为 `8'hEF`，通过 `input [7:0] pattern` 提供 | 已明确 |
-| SOP 数量 | 帧头是三个相邻、值相同的 SOP 字节 | 后续明确 |
-| 帧内容 | 三个 SOP、payload、尾部校验字段 | 已明确 |
-| 尾部字段长度 | 8 bit，即一个字节 | 已明确 |
-| 最后出现的校验规则 | 每 16 bit payload 生成一个 parity bit | 截图注明 |
-| payload 长度 | 复盘版本取 16 字节 | 与 16 元素字节数组、8 个 parity bit 一致；原始措辞有歧义 |
-| 输入时序 | 每个时钟接收一个有效字节 | 原接口没有输入 valid，因此作为实现假设 |
-| parity 类型 | 偶校验 | 原题未明确；上一版参考实现采用的假设 |
-| parity bit 对应顺序 | bit 0 对应前两个 payload 字节，依次类推 | 原题未明确；上一版参考实现采用的假设 |
-| 输出指示 | 截图曾加入 `out_ready` | 出现过该端口，但完整时序定义未明确 |
+| Input width | 8 bits, received byte by byte | Explicitly stated |
+| SOP value | Example: `8'hEF`, supplied through `input [7:0] pattern` | Explicitly stated |
+| SOP count | The header consists of three adjacent SOP bytes with the same value | Clarified later |
+| Frame contents | Three SOPs, payload, and a trailing check field | Explicitly stated |
+| Trailing field length | 8 bits, or one byte | Explicitly stated |
+| Last stated check rule | One parity bit for every 16 payload bits | Noted in the screenshot |
+| Payload length | This reconstruction uses 16 bytes | Consistent with a 16-element byte array and eight parity bits; original wording was ambiguous |
+| Input timing | One valid byte received per clock | Implementation assumption because the original interface had no input valid signal |
+| Parity type | Even parity | Not specified in the original problem; assumed by the previous reference implementation |
+| Parity-bit ordering | Bit 0 covers the first two payload bytes, and so on | Not specified in the original problem; assumed by the previous reference implementation |
+| Output indication | `out_ready` was added in a screenshot | The port appeared, but its complete timing definition was unclear |
 
-### 关于“16 字节”的歧义
+### Ambiguity About "16 Bytes"
 
-最初文字为 “frames of 16 Byte”，可能指整帧长度；但后面出现了 `logic [7:0] out [16]`，以及“每 16 bit 对应一个 parity bit、共 8 bit”的注释。若这 8 个 parity bit 全部用于 payload，则对应的 payload 是 128 bit，也就是 16 字节。
+The original wording, "frames of 16 Byte", might refer to the entire frame length. However, `logic [7:0] out [16]` appeared later, along with a comment specifying one parity bit per 16 bits, eight parity bits in total. If all eight parity bits cover the payload, that payload contains 128 bits, or 16 bytes.
 
-因此，本文的可练习题面采用 **16 字节 payload**：
+This document therefore uses a **16-byte payload** for the practice exercise:
 
-| 字节偏移 | 内容 |
+| Byte offset | Contents |
 | --- | --- |
-| 0–2 | 三个 SOP 字节 |
-| 3–18 | 16 字节 payload |
-| 19 | 1 字节 parity |
+| 0–2 | Three SOP bytes |
+| 3–18 | 16-byte payload |
+| 19 | One parity byte |
 
-在此假设下，整帧为 **20 字节**。不能把“整帧 20 字节”写成已经确认的原题原话；若 16 字节原本指整帧，则扣除 3 字节 SOP 和 1 字节校验后，payload 只有 12 字节，必须进一步确认校验字段如何映射。
+Under this assumption, the entire frame is **20 bytes**. Do not present the 20-byte frame length as confirmed wording from the original problem. If 16 bytes originally referred to the entire frame, subtracting three SOP bytes and one check byte leaves only 12 payload bytes; the check-field mapping would need further clarification.
 
-## 3. 可直接重新练习的题面
+## 3. Reconstructed Practice Exercise
 
-### 中文版
+### Detailed Statement
 
-请使用可综合的 SystemVerilog 设计一个字节流帧解析模块。
+Design a byte-stream frame parser using synthesizable SystemVerilog.
 
-输入 `in` 为 8-bit 字节流，假设每个时钟上升沿都有一个有效字节。输入 `pattern` 指定 SOP 字节，典型值为 `8'hEF`，在接收过程中保持不变。
+Input `in` is an 8-bit byte stream. Assume a valid byte is present at every rising clock edge. Input `pattern` specifies the SOP byte, typically `8'hEF`, and remains unchanged during reception.
 
-每帧按以下顺序组成：
+Each frame consists of the following, in order:
 
-1. 三个连续的 SOP 字节，其值都等于 `pattern`。
-2. 16 字节 payload。
-3. 一个 8-bit parity 字节。
+1. Three consecutive SOP bytes, each equal to `pattern`.
+2. A 16-byte payload.
+3. One 8-bit parity byte.
 
-该练习版本采用偶校验：每两个连续 payload 字节组成一个 16-bit 数据组，计算这 16 个数据位的归约 XOR，作为该组的 parity bit。共八组，组成一个 parity 字节。bit 0 对应 payload 字节 0、1，bit 7 对应字节 14、15。
+This practice version uses even parity: each consecutive pair of payload bytes forms a 16-bit data group. Compute the reduction XOR of those 16 data bits as the group's parity bit. The eight groups form one parity byte. Bit 0 covers payload bytes 0 and 1; bit 7 covers bytes 14 and 15.
 
-模块应完成以下行为：
+The module must implement the following behavior:
 
-- 搜索三个相邻的 SOP；搜索期间遇到不匹配字节，则清零连续匹配计数。
-- 接收第三个 SOP 后，从下一个时钟开始保存 payload；三个 SOP 不属于 payload。
-- 收集全部 16 字节，按接收顺序保存，并在接收过程中累计 parity。
-- 将紧随 payload 的字节解释为收到的 parity，不将它保存为 payload。
-- 比较计算结果与收到的 parity；本练习约定校验成功后输出一个时钟周期的 `out_ready` 脉冲。
-- 校验失败时不产生 `out_ready`，并返回搜索帧头状态；错误输出可作为扩展接口。
-- 完成当前帧处理后，支持紧接着接收下一帧，不要求帧间存在空闲周期。
-- payload 中允许出现与 `pattern` 相同的值，接收 payload 时不重新触发帧头检测。
-- 复位后清除接收状态、计数器和有效指示。本练习取高有效复位。
+- Search for three adjacent SOP bytes. Clear the consecutive-match count if a nonmatching byte arrives during the search.
+- After receiving the third SOP, begin storing payload bytes at the next clock edge. The three SOPs are not part of the payload.
+- Collect all 16 payload bytes in reception order and accumulate parity during reception.
+- Interpret the byte immediately following the payload as the received parity; do not store it as payload.
+- Compare the calculated and received parity. For this exercise, produce a one-clock-cycle `out_ready` pulse after a successful check.
+- On a failed check, do not assert `out_ready` and return to header search. An error output may be added as an interface extension.
+- After processing the current frame, support reception of the next frame immediately, without requiring idle cycles between frames.
+- Payload bytes may equal `pattern`; do not restart header detection while receiving the payload.
+- On reset, clear the reception state, counters, and valid indication. This exercise uses an active-high reset.
 
-若 payload 输出直接用作接收数组，则它可以在接收过程中更新，下游仅在 `out_ready` 有效时读取完整结果。若要求输出保持上一帧有效数据直到下一帧校验通过，应额外使用接收缓冲区；这属于输出时序的扩展约定。
+If the payload output is used directly as the reception array, it may change during reception; the downstream should read the complete result only when `out_ready` is asserted. If the output must hold the previous valid frame until the next frame passes verification, use an additional reception buffer. That is an extension of the output timing contract.
 
-### English reconstruction
+### Concise Statement
 
 Design a synthesizable SystemVerilog byte-stream frame parser. Assume one valid 8-bit input byte per clock. Each frame consists of three consecutive SOP bytes, a 16-byte payload, and one 8-bit parity byte. The SOP value is supplied through an 8-bit `pattern` input and remains stable during reception.
 
@@ -92,9 +92,9 @@ For this reconstructed exercise, use even parity: each consecutive pair of paylo
 
 The 16-byte payload length, parity convention, parity-bit ordering, and exact output timing are explicit assumptions used to make this exercise fully specified.
 
-## 4. 建议接口
+## 4. Suggested Interface
 
-下面是复盘练习用的接口，不是截图接口的逐字抄录：
+The following interface is for the reconstructed exercise, not a verbatim copy of the screenshot interface:
 
 ```systemverilog
 module bfs (
@@ -110,49 +110,49 @@ module bfs (
 endmodule
 ```
 
-`out [0:15]` 是 16 个 8-bit 元素，总容量为 128 bit。`out_ready` 在这里表示“有效结果已就绪”的脉冲，不是下游反压信号。
+`out [0:15]` contains sixteen 8-bit elements, totaling 128 bits. Here, `out_ready` is a pulse indicating that a valid result is ready, not a downstream backpressure signal.
 
-## 5. 解题结构与易错点
+## 5. Suggested Structure and Common Pitfalls
 
-建议分成三个状态：
+Use three states:
 
-| 状态 | 当前输入的含义 | 完成条件 |
+| State | Meaning of the current input | Completion condition |
 | --- | --- | --- |
-| `WAIT_SOP` | 搜索连续 SOP | 接收到第三个 SOP |
-| `CAPTURE` | 保存 payload，并累计 parity | 接收到第 16 个 payload 字节 |
-| `CHECK_PARITY` | 接收尾部校验字节并比较 | 比较后返回 `WAIT_SOP` |
+| `WAIT_SOP` | Search for consecutive SOP bytes | Third SOP received |
+| `CAPTURE` | Store payload and accumulate parity | 16th payload byte received |
+| `CHECK_PARITY` | Receive and compare the trailing check byte | Return to `WAIT_SOP` after comparison |
 
-重点复盘：
+Key review points:
 
-1. **第三个 SOP 到来时，旧计数值是 2。** 使用非阻塞赋值时，当前时钟里的条件判断读取更新前的值，因此 `sop_count == 2 && in == pattern` 可以表示收到了第三个相邻 SOP。
-2. **这次第三个 SOP 不要写入 payload。** 下一拍才是 payload 第 0 字节。这与先前“单 SOP、间隔三帧确认”的错误理解不同。
-3. **字节计数器用 4 bit，范围是 0–15。** 最后一个 payload 字节的判断条件是 15，不是 `16*8-1`。
-4. **数组和 packed vector 的索引含义不同。** 对 `logic [7:0] out [0:15]`，`out[index]` 是一个字节；对 `logic [127:0] out`，`out[index]` 只有一位。
-5. **最后一个 payload 字节必须参与 parity。** 如果它与 parity 字节在不同状态、相邻时钟处理，则下一拍比较时能看到已更新的完整累计结果。
-6. **`wait` 是关键字。** 用 `WAIT_SOP` 等标识符命名状态，并正确声明枚举类型与状态寄存器。
-7. **不能驱动输入端口。** 应递增 `byte_count`，不能写 `in <= in + 1`。
-8. **输出必须是实际的数据接口。** 不要只声明标量 `output out`，却在内部另建同名字节数组。
+1. **The old count is 2 when the third SOP arrives.** With nonblocking assignments, conditions evaluated at the current edge read the value before the update. Thus, `sop_count == 2 && in == pattern` can indicate receipt of the third adjacent SOP.
+2. **Do not store that third SOP as payload.** Payload byte 0 arrives at the next edge. This differs from the earlier mistaken interpretation involving a single SOP and confirmation across three spaced frames.
+3. **Use a 4-bit byte counter with a range of 0–15.** The last payload byte is identified by 15, not `16*8-1`.
+4. **Array and packed-vector indexing have different meanings.** For `logic [7:0] out [0:15]`, `out[index]` is one byte. For `logic [127:0] out`, `out[index]` is only one bit.
+5. **The final payload byte must contribute to parity.** If it and the parity byte are handled in different states at adjacent clock edges, the comparison at the next edge sees the updated, complete accumulated parity.
+6. **`wait` is a keyword.** Name states with identifiers such as `WAIT_SOP`, and declare the enum type and state registers correctly.
+7. **Do not drive input ports.** Increment `byte_count`, rather than writing `in <= in + 1`.
+8. **The output must be an actual data interface.** Do not declare only a scalar `output out` and then create a separate internal byte array with the same name.
 
-## 6. 复盘时应该先澄清的问题
+## 6. Questions to Clarify First During Review
 
-- 16 字节指整帧还是 payload？
-- 尾部字段到底是 CRC-8，还是八组 16-bit 数据各对应一位的 parity？
-- 若为 parity：采用奇校验还是偶校验？八个 bit 如何排序？
-- 若为 CRC：多项式、初值、输入/输出反射、最终 XOR、覆盖范围分别是什么？
-- 输入是否每拍有效？若允许间断，需要补充 `in_valid`。
-- 下游是否支持每帧完成时立即接收？是否需要保持输出或增加反压？
-- 校验失败后仅重新搜索，还是还需要错误标志、计数等输出？
+- Does 16 bytes refer to the entire frame or just the payload?
+- Is the trailing field CRC-8, or eight parity bits, each covering one 16-bit data group?
+- If parity is used, is it odd or even? How are the eight bits ordered?
+- If CRC is used, what are the polynomial, initial value, input/output reflection settings, final XOR, and covered data range?
+- Is input valid every cycle? If gaps are allowed, add `in_valid`.
+- Can the downstream accept each frame immediately when it completes? Must output data be held, or is backpressure needed?
+- After a failed check, should the module only resume header search, or also provide an error flag, count, or other output?
 
-这些问题里，只有前三个连续 SOP、字节流输入、可配置 SOP 和一个字节的尾部校验在后续描述中较明确。其余不应把参考代码里的默认选择当作原题硬性要求。
+Of these points, only the three consecutive leading SOP bytes, byte-stream input, configurable SOP value, and one-byte trailing check were reasonably clear in the later description. Do not treat default choices in reference code as mandatory requirements of the original problem.
 
-## 7. 建议自测场景
+## 7. Suggested Self-Test Cases
 
-- 正常帧：三个 SOP、16 字节 payload、正确 parity，应产生一次有效脉冲。
-- 不完整帧头：一个或两个 SOP 后出现其他值，应重新开始计数。
-- payload 含 SOP：不应提前开始新帧。
-- 校验错误：翻转 parity 的一位，应拒绝该 payload。
-- 两个正确帧紧邻：应分别产生两次有效脉冲。
-- 接收中复位：应丢弃未完成帧，并重新搜索 SOP。
-- 计数边界：确认只收 16 字节，尾部校验不混入 payload。
+- Valid frame: three SOPs, 16 payload bytes, and correct parity should produce one valid pulse.
+- Incomplete header: a different value after one or two SOPs should restart the count.
+- SOP in the payload: it must not start a new frame early.
+- Check failure: flip one parity bit; the payload should be rejected.
+- Two adjacent valid frames: each should produce its own valid pulse.
+- Reset during reception: discard the incomplete frame and resume SOP search.
+- Counter boundaries: receive exactly 16 payload bytes, without including the trailing check byte.
 
-注意：parity 不能发现所有多位错误。验证测试应按实际 parity 规则给出预期结果，而不是假定任意数据修改都一定被检测到。
+Note: parity cannot detect every multibit error. Verification tests should derive expected results from the actual parity rule, rather than assuming that every data modification must be detected.

@@ -1,20 +1,22 @@
-题目：无符号逐位恢复除法器
+Question: Unsigned Bit-Serial Restoring Divider
 
-设计一个可参数化模块 unsigned_restoring_divider，计算：
+Design a parameterized module named unsigned_restoring_divider that calculates:
 
   quotient  = dividend / divisor
   remainder = dividend % divisor
 
-接口要求：
-1. dividend、divisor、quotient、remainder 均为 DATA_WIDTH 位无符号数。
-2. start=1 且 ready=1 的上升沿接受一组输入。
-3. 非零除法执行期间 busy=1，共进行 DATA_WIDTH 次逐位迭代。
-4. 结果完成时 done 拉高一个时钟周期，quotient 和 remainder 同时有效。
-5. busy=1 时忽略新的 start 请求。
-6. divisor=0 时：quotient=0、remainder=dividend、div_by_zero=1。
-7. 使用逐位恢复除法算法，每周期只使用一次移位、比较和减法运算。
+Interface requirements:
+1. dividend, divisor, quotient, and remainder are DATA_WIDTH-bit unsigned values.
+2. Accept one set of inputs on a rising edge when start=1 and ready=1.
+3. Hold busy=1 during division by a nonzero divisor, performing DATA_WIDTH bit-by-bit
+   iterations in total.
+4. Assert done for one clock cycle when the result is complete; quotient and
+   remainder become valid together.
+5. Ignore new start requests while busy=1.
+6. If divisor=0: quotient=0, remainder=dividend, and div_by_zero=1.
+7. Use the bit-serial restoring division algorithm, performing only one shift,
+   compare, and subtract operation per cycle.
 
-默认参数：
+Default parameter:
 
   DATA_WIDTH = 8
-
