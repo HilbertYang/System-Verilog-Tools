@@ -60,6 +60,7 @@ verified.
 | [unsigned_divider](IP/unsigned_divider/) | Parameterized restoring division with quotient, remainder, and divide-by-zero handling. | [Question](IP/unsigned_divider/question.txt) |
 | [divider_sum](IP/divider_sum/) | Computing `a/b + c/d + e/f` with resource-sharing and parallel pipeline architectures. | [Question](IP/divider_sum/question.txt) |
 | [saturating_accumulator](IP/saturating_accumulator/) | Signed accumulation with saturation and clipping indication. | [Question](IP/saturating_accumulator/question.txt) |
+| [fixed_point_quantizer](IP/fixed_point_quantizer/) | Signed fixed-point conversion with rounding to nearest, ties to even, and 8-bit saturation. | [Question](IP/fixed_point_quantizer/question.md) |
 | [moving_sum4](IP/moving_sum4/) | Running sum of the four most recently accepted samples. | [Question](IP/moving_sum4/question.txt) |
 | [signed_sort4](IP/signed_sort4/) | Sorting four signed values with stable tie ordering, original lane indices, and registered results. | [Question](IP/signed_sort4/question.md) |
 
