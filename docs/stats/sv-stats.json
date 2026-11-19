@@ -2,7 +2,7 @@
   "schema_version": 1,
   "as_of": "2026-11-19",
   "timezone": "America/Los_Angeles",
-  "last_rtl_commit": "a5e13275860fca18fd3e12efadad07e59eb5010e",
+  "last_rtl_commit": "e4d7861a609aa18c5c776ddde55ac4939a754422",
   "scope": {
     "roots": [
       "IP"
@@ -25,14 +25,14 @@
     "chart_days": 30
   },
   "current": {
-    "files": 38,
-    "code_lines": 1911,
-    "physical_lines": 2231
+    "files": 39,
+    "code_lines": 1993,
+    "physical_lines": 2319
   },
   "history": {
-    "added": 2272,
+    "added": 2360,
     "deleted": 41,
-    "commits": 21,
+    "commits": 22,
     "daily": [
       {
         "date": "2026-04-30",
@@ -151,6 +151,12 @@
       {
         "date": "2026-11-17",
         "added": 46,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-19",
+        "added": 88,
         "deleted": 0,
         "commits": 1
       }
@@ -333,9 +339,9 @@
     },
     {
       "date": "2026-11-19",
-      "added": 0,
+      "added": 88,
       "deleted": 0,
-      "commits": 0
+      "commits": 1
     }
   ],
   "files": [
@@ -493,6 +499,11 @@
       "path": "IP/sixLaneSum_handshake/sixLaneSum_pipe2.sv",
       "physical_lines": 44,
       "code_lines": 39
+    },
+    {
+      "path": "IP/spi_master8/spi_master8.sv",
+      "physical_lines": 88,
+      "code_lines": 82
     },
     {
       "path": "IP/stream_broadcast2/stream_broadcast2.sv",
