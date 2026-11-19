@@ -98,6 +98,7 @@ identifies assumptions used to complete its specification.
 | [interrupt_controller8](IP/interrupt_controller8/) | Pending interrupts, masking, event/clear priority, and fixed-priority encoding. | [Question](IP/interrupt_controller8/question.txt) |
 | [watchdog_timer](IP/watchdog_timer/) | Programmable timeout intervals, kicks, and expiration reporting. | [Question](IP/watchdog_timer/question.txt) |
 | [pwm_generator](IP/pwm_generator/) | Programmable PWM period and duty with configuration updates applied at frame boundaries and latest-request priority. | [Question](IP/pwm_generator/question.md) |
+| [spi_master8](IP/spi_master8/) | Eight-bit SPI Mode 0 transfers with captured clock division, MSB-first full-duplex shifting, and exact completion timing. | [Question](IP/spi_master8/question.md) |
 | [clk_divider](IP/clk_divider/) | Divide-by-two and divide-by-three clocks with 50% duty-cycle requirements. | [Question](IP/clk_divider/question.txt) |
 | [asynSynreset](IP/asynSynreset/) | Asynchronous reset assertion and synchronous release. | [Question](IP/asynSynreset/question.txt) |
 | [pulse_cdc_handshake](IP/pulse_cdc_handshake/) | Reliable event transfer across clock domains using request/acknowledgment synchronization. | [Question](IP/pulse_cdc_handshake/question.txt) |
