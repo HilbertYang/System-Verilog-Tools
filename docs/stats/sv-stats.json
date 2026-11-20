@@ -2,7 +2,7 @@
   "schema_version": 1,
   "as_of": "2026-11-20",
   "timezone": "America/Los_Angeles",
-  "last_rtl_commit": "e4d7861a609aa18c5c776ddde55ac4939a754422",
+  "last_rtl_commit": "2efa18c065e4a1df0629faca05387c324da517bf",
   "scope": {
     "roots": [
       "IP"
@@ -25,14 +25,14 @@
     "chart_days": 30
   },
   "current": {
-    "files": 39,
-    "code_lines": 1993,
-    "physical_lines": 2319
+    "files": 40,
+    "code_lines": 2053,
+    "physical_lines": 2382
   },
   "history": {
-    "added": 2360,
+    "added": 2423,
     "deleted": 41,
-    "commits": 22,
+    "commits": 23,
     "daily": [
       {
         "date": "2026-04-30",
@@ -157,6 +157,12 @@
       {
         "date": "2026-11-19",
         "added": 88,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-20",
+        "added": 63,
         "deleted": 0,
         "commits": 1
       }
@@ -339,9 +345,9 @@
     },
     {
       "date": "2026-11-20",
-      "added": 0,
+      "added": 63,
       "deleted": 0,
-      "commits": 0
+      "commits": 1
     }
   ],
   "files": [
@@ -374,6 +380,11 @@
       "path": "IP/asynSynreset/async_rst_sync_release.sv",
       "physical_lines": 18,
       "code_lines": 16
+    },
+    {
+      "path": "IP/burst_ram_reader/burst_ram_reader.sv",
+      "physical_lines": 63,
+      "code_lines": 60
     },
     {
       "path": "IP/byte_stream_parser/byte_stream_parser.sv",
