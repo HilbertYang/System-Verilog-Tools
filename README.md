@@ -88,6 +88,7 @@ identifies assumptions used to complete its specification.
 | [syn_fifo](IP/fifo/syn_fifo/) | Eight-entry synchronous FIFO with defined simultaneous read/write behavior. | [Question](IP/fifo/syn_fifo/question.txt) |
 | [byte_write_ram](IP/byte_write_ram/) | Synchronous RAM with byte write enables and same-address read-before-write behavior. | [Question](IP/byte_write_ram/question.txt) |
 | [burst_ram_reader](IP/burst_ram_reader/) | Burst RAM reads with output backpressure, address wraparound, and precisely timed read-before-write behavior. | [Question](IP/burst_ram_reader/question.md) |
+| [completion_buffer4](IP/completion_buffer4/) | Four-entry buffering of out-of-order task completions with tagged allocation, ordered output, and backpressure. | [Question](IP/completion_buffer4/question.md) |
 | [assoc_table4](IP/assoc_table4/) | Four-entry key/data lookup with insertion, overwrite, deletion, and concurrent lookup/update operations. | [Question](IP/assoc_table4/question.md) |
 
 ### Control, Arbitration, Clocks, and Reset
