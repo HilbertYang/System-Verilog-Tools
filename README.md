@@ -57,6 +57,7 @@ verified.
 | [two_bit_full_adder](IP/two_bit_full_adder/) | Two-bit addition by instantiating one-bit full adders. | [Question](IP/two_bit_full_adder/question.txt) |
 | [sixLaneSum_handshake](IP/sixLaneSum_handshake/) | Six-input summation with single-stage and two-stage valid/ready designs. | [Question](IP/sixLaneSum_handshake/question.txt) |
 | [iterative_multiplier](IP/iterative_multiplier/) | Eight-cycle unsigned multiplication using shift-and-add operations. | [Question](IP/iterative_multiplier/question.txt) |
+| [gcd8](IP/gcd8/) | Iterative unsigned GCD using one subtraction per processing cycle, with variable latency and defined completion timing. | [Question](IP/gcd8/question.md) |
 | [unsigned_divider](IP/unsigned_divider/) | Parameterized restoring division with quotient, remainder, and divide-by-zero handling. | [Question](IP/unsigned_divider/question.txt) |
 | [divider_sum](IP/divider_sum/) | Computing `a/b + c/d + e/f` with resource-sharing and parallel pipeline architectures. | [Question](IP/divider_sum/question.txt) |
 | [saturating_accumulator](IP/saturating_accumulator/) | Signed accumulation with saturation and clipping indication. | [Question](IP/saturating_accumulator/question.txt) |
