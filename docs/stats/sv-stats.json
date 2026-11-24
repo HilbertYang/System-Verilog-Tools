@@ -2,7 +2,7 @@
   "schema_version": 1,
   "as_of": "2026-11-23",
   "timezone": "America/Los_Angeles",
-  "last_rtl_commit": "2e126f46728020dcb0a6b0c5e29a7572c7a6871b",
+  "last_rtl_commit": "47b8ce4e3b1384a397a033e6aa0eb42d2b4238fe",
   "scope": {
     "roots": [
       "IP"
@@ -25,14 +25,14 @@
     "chart_days": 30
   },
   "current": {
-    "files": 42,
-    "code_lines": 2157,
-    "physical_lines": 2498
+    "files": 43,
+    "code_lines": 2219,
+    "physical_lines": 2565
   },
   "history": {
-    "added": 2539,
+    "added": 2606,
     "deleted": 41,
-    "commits": 25,
+    "commits": 26,
     "daily": [
       {
         "date": "2026-04-30",
@@ -171,6 +171,12 @@
         "added": 116,
         "deleted": 0,
         "commits": 2
+      },
+      {
+        "date": "2026-11-23",
+        "added": 67,
+        "deleted": 0,
+        "commits": 1
       }
     ]
   },
@@ -351,9 +357,9 @@
     },
     {
       "date": "2026-11-23",
-      "added": 0,
+      "added": 67,
       "deleted": 0,
-      "commits": 0
+      "commits": 1
     }
   ],
   "files": [
@@ -446,6 +452,11 @@
       "path": "IP/fixed_point_quantizer/fixed_point_quantizer.sv",
       "physical_lines": 46,
       "code_lines": 45
+    },
+    {
+      "path": "IP/gcd8/gcd8.sv",
+      "physical_lines": 67,
+      "code_lines": 62
     },
     {
       "path": "IP/interrupt_controller8/interrupt_controller8.sv",
