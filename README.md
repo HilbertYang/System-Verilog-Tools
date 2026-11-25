@@ -88,6 +88,7 @@ identifies assumptions used to complete its specification.
 | Exercise | Focus | Problem statement |
 | --- | --- | --- |
 | [syn_fifo](IP/fifo/syn_fifo/) | Eight-entry synchronous FIFO with defined simultaneous read/write behavior. | [Question](IP/fifo/syn_fifo/question.txt) |
+| [packet_commit_fifo](IP/packet_commit_fifo/) | Eight-byte packet FIFO with whole-packet commit, unfinished-packet abort, output backpressure, and shared storage accounting. | [Question](IP/packet_commit_fifo/question.md) |
 | [byte_write_ram](IP/byte_write_ram/) | Synchronous RAM with byte write enables and same-address read-before-write behavior. | [Question](IP/byte_write_ram/question.txt) |
 | [burst_ram_reader](IP/burst_ram_reader/) | Burst RAM reads with output backpressure, address wraparound, and precisely timed read-before-write behavior. | [Question](IP/burst_ram_reader/question.md) |
 | [completion_buffer4](IP/completion_buffer4/) | Four-entry buffering of out-of-order task completions with tagged allocation, ordered output, and backpressure. | [Question](IP/completion_buffer4/question.md) |
