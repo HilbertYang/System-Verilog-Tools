@@ -9,7 +9,7 @@ interfaces, storage, control logic, clock-domain crossing, and state machines.
 <!-- SV-STATS:START -->
 | RTL implementation files | Current code lines | All-time added / deleted | Last 30 days added / deleted |
 | ---: | ---: | ---: | ---: |
-| 43 | 2,219 | +2,606 / −41 | +1,906 / −41 |
+| 44 | 2,282 | +2,675 / −41 | +1,975 / −41 |
 
 ![Daily RTL practice](docs/stats/sv-activity.svg)
 

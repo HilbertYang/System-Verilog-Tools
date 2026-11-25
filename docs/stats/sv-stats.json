@@ -2,7 +2,7 @@
   "schema_version": 1,
   "as_of": "2026-11-25",
   "timezone": "America/Los_Angeles",
-  "last_rtl_commit": "47b8ce4e3b1384a397a033e6aa0eb42d2b4238fe",
+  "last_rtl_commit": "99f7478743c6a09c701ad2a0640df01f71d4ceed",
   "scope": {
     "roots": [
       "IP"
@@ -25,14 +25,14 @@
     "chart_days": 30
   },
   "current": {
-    "files": 43,
-    "code_lines": 2219,
-    "physical_lines": 2565
+    "files": 44,
+    "code_lines": 2282,
+    "physical_lines": 2634
   },
   "history": {
-    "added": 2606,
+    "added": 2675,
     "deleted": 41,
-    "commits": 26,
+    "commits": 27,
     "daily": [
       {
         "date": "2026-04-30",
@@ -175,6 +175,12 @@
       {
         "date": "2026-11-23",
         "added": 67,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-25",
+        "added": 69,
         "deleted": 0,
         "commits": 1
       }
@@ -357,9 +363,9 @@
     },
     {
       "date": "2026-11-25",
-      "added": 0,
+      "added": 69,
       "deleted": 0,
-      "commits": 0
+      "commits": 1
     }
   ],
   "files": [
@@ -487,6 +493,11 @@
       "path": "IP/packet_arbiter/packet_arbiter_buffer.sv",
       "physical_lines": 98,
       "code_lines": 90
+    },
+    {
+      "path": "IP/packet_commit_fifo/packet_commit_fifo.sv",
+      "physical_lines": 69,
+      "code_lines": 63
     },
     {
       "path": "IP/packet_crc8/packet_crc8.sv",
