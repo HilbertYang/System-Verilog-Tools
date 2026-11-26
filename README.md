@@ -9,11 +9,11 @@ interfaces, storage, control logic, clock-domain crossing, and state machines.
 <!-- SV-STATS:START -->
 | RTL implementation files | Current code lines | All-time added / deleted | Last 30 days added / deleted |
 | ---: | ---: | ---: | ---: |
-| 44 | 2,282 | +2,675 / −41 | +1,975 / −41 |
+| 44 | 2,282 | +2,675 / −41 | +1,572 / −41 |
 
 ![Daily RTL practice](docs/stats/sv-activity.svg)
 
-As of **2026-11-25** (America/Los_Angeles). Counts use committed `HEAD`,
+As of **2026-11-26** (America/Los_Angeles). Counts use committed `HEAD`,
 with implementation `.sv` / `.v` files under `IP/`; testbenches, golden files,
 and reference files are excluded by filename. Current code lines exclude blank
 and comment-only lines. Historical changes include all physical lines and use
