@@ -102,6 +102,7 @@ identifies assumptions used to complete its specification.
 | [resource_allocator8](IP/resource_allocator8/) | Dual-port allocation of eight resource IDs with fixed priority, release masks, and same-edge reuse. | [Question](IP/resource_allocator8/question.md) |
 | [interrupt_controller8](IP/interrupt_controller8/) | Pending interrupts, masking, event/clear priority, and fixed-priority encoding. | [Question](IP/interrupt_controller8/question.txt) |
 | [watchdog_timer](IP/watchdog_timer/) | Programmable timeout intervals, kicks, and expiration reporting. | [Question](IP/watchdog_timer/question.txt) |
+| [programmable_debouncer](IP/programmable_debouncer/) | Input glitch filtering with separately captured rising/falling sample requirements and precise transition pulses. | [Question](IP/programmable_debouncer/question.md) |
 | [pwm_generator](IP/pwm_generator/) | Programmable PWM period and duty with configuration updates applied at frame boundaries and latest-request priority. | [Question](IP/pwm_generator/question.md) |
 | [spi_master8](IP/spi_master8/) | Eight-bit SPI Mode 0 transfers with captured clock division, MSB-first full-duplex shifting, and exact completion timing. | [Question](IP/spi_master8/question.md) |
 | [clk_divider](IP/clk_divider/) | Divide-by-two and divide-by-three clocks with 50% duty-cycle requirements. | [Question](IP/clk_divider/question.txt) |
