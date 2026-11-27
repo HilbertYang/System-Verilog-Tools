@@ -2,7 +2,7 @@
   "schema_version": 1,
   "as_of": "2026-11-26",
   "timezone": "America/Los_Angeles",
-  "last_rtl_commit": "99f7478743c6a09c701ad2a0640df01f71d4ceed",
+  "last_rtl_commit": "41cc7e23d5acc982a096378d553f21f558a4c448",
   "scope": {
     "roots": [
       "IP"
@@ -25,14 +25,14 @@
     "chart_days": 30
   },
   "current": {
-    "files": 44,
-    "code_lines": 2282,
-    "physical_lines": 2634
+    "files": 45,
+    "code_lines": 2334,
+    "physical_lines": 2691
   },
   "history": {
-    "added": 2675,
+    "added": 2732,
     "deleted": 41,
-    "commits": 27,
+    "commits": 28,
     "daily": [
       {
         "date": "2026-04-30",
@@ -181,6 +181,12 @@
       {
         "date": "2026-11-25",
         "added": 69,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-26",
+        "added": 57,
         "deleted": 0,
         "commits": 1
       }
@@ -363,9 +369,9 @@
     },
     {
       "date": "2026-11-26",
-      "added": 0,
+      "added": 57,
       "deleted": 0,
-      "commits": 0
+      "commits": 1
     }
   ],
   "files": [
@@ -503,6 +509,11 @@
       "path": "IP/packet_crc8/packet_crc8.sv",
       "physical_lines": 52,
       "code_lines": 48
+    },
+    {
+      "path": "IP/programmable_debouncer/programmable_debouncer.sv",
+      "physical_lines": 57,
+      "code_lines": 52
     },
     {
       "path": "IP/pulse_cdc_handshake/pulse_cdc_handshake.sv",
