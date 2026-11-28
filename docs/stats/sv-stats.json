@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "as_of": "2026-11-27",
+  "as_of": "2026-11-28",
   "timezone": "America/Los_Angeles",
   "last_rtl_commit": "614c001854a82875767ca0d7ff635e7c2bd0b917",
   "scope": {
@@ -200,12 +200,6 @@
   },
   "recent": [
     {
-      "date": "2026-10-29",
-      "added": 42,
-      "deleted": 0,
-      "commits": 1
-    },
-    {
       "date": "2026-10-30",
       "added": 0,
       "deleted": 0,
@@ -378,6 +372,12 @@
       "added": 63,
       "deleted": 0,
       "commits": 1
+    },
+    {
+      "date": "2026-11-28",
+      "added": 0,
+      "deleted": 0,
+      "commits": 0
     }
   ],
   "files": [
