@@ -2,7 +2,7 @@
   "schema_version": 1,
   "as_of": "2026-11-27",
   "timezone": "America/Los_Angeles",
-  "last_rtl_commit": "41cc7e23d5acc982a096378d553f21f558a4c448",
+  "last_rtl_commit": "614c001854a82875767ca0d7ff635e7c2bd0b917",
   "scope": {
     "roots": [
       "IP"
@@ -25,14 +25,14 @@
     "chart_days": 30
   },
   "current": {
-    "files": 45,
-    "code_lines": 2334,
-    "physical_lines": 2691
+    "files": 46,
+    "code_lines": 2387,
+    "physical_lines": 2754
   },
   "history": {
-    "added": 2732,
+    "added": 2795,
     "deleted": 41,
-    "commits": 28,
+    "commits": 29,
     "daily": [
       {
         "date": "2026-04-30",
@@ -187,6 +187,12 @@
       {
         "date": "2026-11-26",
         "added": 57,
+        "deleted": 0,
+        "commits": 1
+      },
+      {
+        "date": "2026-11-27",
+        "added": 63,
         "deleted": 0,
         "commits": 1
       }
@@ -369,9 +375,9 @@
     },
     {
       "date": "2026-11-27",
-      "added": 0,
+      "added": 63,
       "deleted": 0,
-      "commits": 0
+      "commits": 1
     }
   ],
   "files": [
@@ -479,6 +485,11 @@
       "path": "IP/iterative_multiplier/iterative_multiplier.sv",
       "physical_lines": 53,
       "code_lines": 50
+    },
+    {
+      "path": "IP/lru4/lru4.sv",
+      "physical_lines": 63,
+      "code_lines": 53
     },
     {
       "path": "IP/moving_sum4/moving_sum4.sv",
