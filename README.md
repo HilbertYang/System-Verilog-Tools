@@ -93,6 +93,7 @@ identifies assumptions used to complete its specification.
 | [burst_ram_reader](IP/burst_ram_reader/) | Burst RAM reads with output backpressure, address wraparound, and precisely timed read-before-write behavior. | [Question](IP/burst_ram_reader/question.md) |
 | [completion_buffer4](IP/completion_buffer4/) | Four-entry buffering of out-of-order task completions with tagged allocation, ordered output, and backpressure. | [Question](IP/completion_buffer4/question.md) |
 | [assoc_table4](IP/assoc_table4/) | Four-entry key/data lookup with insertion, overwrite, deletion, and concurrent lookup/update operations. | [Question](IP/assoc_table4/question.md) |
+| [lru4](IP/lru4/) | Four-way exact LRU metadata with invalid-way priority, touch promotion, and concurrent invalidation. | [Question](IP/lru4/question.md) |
 
 ### Control, Arbitration, Clocks, and Reset
 
